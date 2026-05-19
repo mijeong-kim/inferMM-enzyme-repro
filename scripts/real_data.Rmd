@@ -1,0 +1,886 @@
+---
+title: "Real Data"
+---
+
+# ==========================================================
+# SDL 데이터 가공
+# ==========================================================
+```{r}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(purrr)
+library(ggplot2)
+
+find_repo_root <- function(start = getwd()) {
+  current <- normalizePath(start, winslash = "/", mustWork = TRUE)
+  repeat {
+    if (dir.exists(file.path(current, "scripts")) &&
+        dir.exists(file.path(current, "data")) &&
+        dir.exists(file.path(current, "results"))) {
+      return(current)
+    }
+    parent <- dirname(current)
+    if (identical(parent, current)) {
+      stop("Could not locate the inferMM-cils-repro project root.")
+    }
+    current <- parent
+  }
+}
+
+project_root <- find_repo_root()
+data_raw_dir <- file.path(project_root, "data", "raw")
+data_processed_dir <- file.path(project_root, "data", "processed")
+real_data_results_dir <- file.path(project_root, "results", "chapter4_real_data_analysis")
+real_data_fig_dir <- file.path(real_data_results_dir, "figures")
+real_data_table_dir <- file.path(real_data_results_dir, "table")
+
+dir.create(data_processed_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(real_data_fig_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(real_data_table_dir, recursive = TRUE, showWarnings = FALSE)
+
+# --------------------------------------------------
+# 0) 설정
+# --------------------------------------------------
+csv_path <- file.path(data_raw_dir, "SDL_data_raw.csv")
+
+# 4MU standard curve의 slope
+# RFU = 2487.8 + 794.64 * [4MU]
+beta_rfu_per_uM <- 794.64
+
+# 초기 속도 계산에 쓸 시간점 개수
+n_initial_points <- 3
+
+# --------------------------------------------------
+# 1) CSV 읽기
+# --------------------------------------------------
+mm_raw <- read.csv(
+  csv_path,
+  check.names = FALSE,
+  colClasses = "character"
+)
+
+# 원래 헤더 저장
+raw_headers <- names(mm_raw)
+
+# 첫 열 이름 통일
+raw_headers[1] <- "time_s"
+
+# 데이터프레임에는 고유한 내부 열 ID 부여
+internal_names <- c("time_s", paste0("col_", seq_len(ncol(mm_raw) - 1)))
+names(mm_raw) <- internal_names
+
+# --------------------------------------------------
+# 2) 메타데이터 만들기
+#    - raw header에서 enzyme, substrate 농도, replicate 추출
+#    - 조인은 col_id(=열 위치 기반 고유 이름)로 함
+# --------------------------------------------------
+meta <- tibble(
+  col_id   = internal_names[-1],
+  raw_name = raw_headers[-1]
+) %>%
+  mutate(
+    raw_name = trimws(raw_name),
+    
+    clean_name = raw_name %>%
+      str_remove("^X") %>%
+      str_replace_all("\\s+", "") %>%
+      str_remove("\\.\\.\\.[0-9]+$") %>%
+      str_remove("\\.[0-9]+$"),
+    
+    parsed = str_match(clean_name, "^([0-9]+)[-.]([0-9]+(?:\\.[0-9]+)?)(u|uM)$"),
+    
+    enzyme = parsed[, 2],
+    s_uM   = as.numeric(parsed[, 3])
+  ) %>%
+  filter(!is.na(enzyme), !is.na(s_uM)) %>%
+  group_by(clean_name) %>%
+  mutate(replicate = row_number()) %>%
+  ungroup() %>%
+  select(col_id, raw_name, clean_name, enzyme, s_uM, replicate)
+
+# 확인
+print(meta, n = 30)
+
+# --------------------------------------------------
+# 3) long format으로 변환
+# --------------------------------------------------
+mm_long <- mm_raw %>%
+  pivot_longer(
+    cols = -time_s,
+    names_to = "col_id",
+    values_to = "rfu_raw"
+  ) %>%
+  left_join(meta, by = "col_id") %>%
+  filter(!is.na(enzyme), !is.na(s_uM)) %>%
+  mutate(
+    time_s  = suppressWarnings(as.numeric(time_s)),
+    rfu_raw = trimws(as.character(rfu_raw)),
+    rfu_raw = na_if(rfu_raw, ""),
+    rfu_raw = na_if(rfu_raw, "NA"),
+    rfu_raw = na_if(rfu_raw, "OVER"),
+    rfu     = suppressWarnings(as.numeric(rfu_raw))
+  ) %>%
+  filter(!is.na(time_s)) %>%
+  arrange(enzyme, s_uM, replicate, time_s)
+
+# 확인
+print(mm_long, n = 20)
+cat("\n행 수:", nrow(mm_long), "\n")
+
+# --------------------------------------------------
+# 4) 초기 slope 계산 함수
+#    - 처음 3개 시간점 사용
+# --------------------------------------------------
+calc_initial_slope <- function(df_one_group, n_pts = 3) {
+  dat <- df_one_group %>%
+    arrange(time_s) %>%
+    slice_head(n = n_pts)
+  
+  if (nrow(dat) < n_pts || any(is.na(dat$rfu)) || any(is.na(dat$time_s))) {
+    return(tibble(
+      n_used = nrow(dat),
+      times_used = paste(round(dat$time_s, 3), collapse = ", "),
+      intercept_rfu = NA_real_,
+      slope_rfu_per_s = NA_real_,
+      r2 = NA_real_
+    ))
+  }
+  
+  fit <- lm(rfu ~ time_s, data = dat)
+  
+  tibble(
+    n_used = nrow(dat),
+    times_used = paste(round(dat$time_s, 3), collapse = ", "),
+    intercept_rfu = unname(coef(fit)[1]),
+    slope_rfu_per_s = unname(coef(fit)[2]),
+    r2 = summary(fit)$r.squared
+  )
+}
+
+# --------------------------------------------------
+# 5) replicate-level rate 추출
+# --------------------------------------------------
+rate_rfu <- mm_long %>%
+  group_by(enzyme, s_uM, replicate) %>%
+  group_split() %>%
+  map_dfr(function(g) {
+    info <- g %>% distinct(enzyme, s_uM, replicate)
+    bind_cols(info, calc_initial_slope(g, n_pts = n_initial_points))
+  }) %>%
+  ungroup()
+
+print(rate_rfu, n = 30)
+
+# --------------------------------------------------
+# 6) RFU/sec -> uM/sec 변환
+# --------------------------------------------------
+sv_raw <- rate_rfu %>%
+  mutate(
+    v_uM_per_s   = slope_rfu_per_s / beta_rfu_per_uM,
+    v_uM_per_min = 60 * v_uM_per_s
+  ) %>%
+  filter(!is.na(v_uM_per_s)) %>%
+  arrange(enzyme, s_uM, replicate)
+
+print(sv_raw, n = 30)
+
+# --------------------------------------------------
+# 7) 농도별 평균 요약
+# --------------------------------------------------
+sv_mean <- sv_raw %>%
+  group_by(enzyme, s_uM) %>%
+  summarise(
+    n_rep = n(),
+    mean_v_uM_per_s   = mean(v_uM_per_s, na.rm = TRUE),
+    sd_v_uM_per_s     = sd(v_uM_per_s, na.rm = TRUE),
+    mean_v_uM_per_min = mean(v_uM_per_min, na.rm = TRUE),
+    sd_v_uM_per_min   = sd(v_uM_per_min, na.rm = TRUE),
+    mean_r2           = mean(r2, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(enzyme, s_uM)
+
+print(sv_mean, n = 30)
+
+# --------------------------------------------------
+# 8) 저장
+# --------------------------------------------------
+write.csv(sv_raw, file.path(data_processed_dir, "SDL_data.csv"), row.names = FALSE)
+```
+
+
+# SDL 데이터 분석
+```{r}
+rm(list = setdiff(
+  ls(),
+  c(
+    "find_repo_root",
+    "project_root",
+    "data_raw_dir",
+    "data_processed_dir",
+    "real_data_results_dir",
+    "real_data_fig_dir",
+    "real_data_table_dir"
+  )
+))
+
+# ==========================================================
+# Michaelis-Menten Model Selection Framework
+# ==========================================================
+
+library(dplyr)
+
+# 1. 데이터 로드
+file_path <- file.path(data_processed_dir, "SDL_data.csv")
+df <- read.csv(file_path)
+
+# 2. 모델 설정 (분산 가중치 함수 h(x) 4종)
+models <- list(
+  "log(x+1)"     = function(x) log(x + 1),
+  "x^(1/2)"      = function(x) x^0.5,
+  "x^(1/3)"      = function(x) x^(1/3),
+  "Standard_NLS" = function(x) rep(1, length(x))
+)
+
+# 기본 수식 및 유틸리티
+mm_mean <- function(x, vmax, km) { vmax * x / (km + x) }
+safe_pos <- function(x) { pmin(pmax(x, 1e-10), 1e10) }
+
+# 3. 핵심 적합 엔진
+fit_mm_weighted <- function(x, y, h_fun) {
+  h_vals <- safe_pos(h_fun(x))
+  w <- 1 / h_vals
+  
+  # Km 추정을 위한 Score function
+  score_fn <- function(km) {
+    sum(w * x * y / (km + x)) * sum(w * x^2 / (km + x)^3) - 
+      sum(w * x * y / (km + x)^2) * sum(w * x^2 / (km + x)^2)
+  }
+  
+  # Km 탐색 루틴
+  upper_limit <- max(x) * 3
+  grid <- exp(seq(log(1e-4), log(upper_limit), length.out = 200))
+  s_vals <- vapply(grid, score_fn, numeric(1))
+  idx <- which(diff(sign(s_vals)) != 0)
+  
+  km_hat <- if(length(idx) > 0) {
+    uniroot(score_fn, c(grid[idx[1]], grid[idx[1]+1]))$root 
+  } else {
+    optimize(function(k) score_fn(k)^2, c(1e-6, upper_limit))$minimum
+  }
+  
+  vmax_hat <- sum(w * x * y / (km_hat + x)) / sum(w * x^2 / (km_hat + x)^2)
+  mu_hat   <- mm_mean(x, vmax_hat, km_hat)
+  eps      <- y - mu_hat
+  gamma_hat <- mean(eps^2 / h_vals)
+  
+  # --- Confidence Interval (CI) 계산 ---
+  n <- length(y)
+  p <- 2 # Vmax, Km
+  df_res <- n - p
+  
+  # 자코비안 계산 (f에 대한 Vmax, Km의 편미분)
+  # d_vmax = x / (Km + x)
+  # d_km = -Vmax * x / (Km + x)^2
+  j1 <- x / (km_hat + x)
+  j2 <- -vmax_hat * x / (km_hat + x)^2
+  J  <- cbind(j1, j2)
+  
+  # 가중치가 적용된 정보 행렬: I = J' W J
+  # (이때 gamma_hat은 분산의 스케일 인자)
+  W_mat <- diag(w)
+  info_mat <- t(J) %*% W_mat %*% J
+  
+  # 공분산 행렬: Cov = gamma_hat * inv(I)
+  cov_mat <- tryCatch(solve(info_mat) * gamma_hat, error = function(e) matrix(NA, 2, 2))
+  
+  if (!any(is.na(cov_mat))) {
+    se <- sqrt(diag(cov_mat))
+    t_val <- qt(0.975, df_res) # 95% CI를 위한 t-value
+    
+    vmax_ci <- c(vmax_hat - t_val * se[1], vmax_hat + t_val * se[1])
+    km_ci   <- c(km_hat - t_val * se[2], km_hat + t_val * se[2])
+  } else {
+    vmax_ci <- c(NA, NA)
+    km_ci   <- c(NA, NA)
+  }
+  
+  # 통계 지표 계산
+  loglik <- sum(dnorm(y, mean = mu_hat, sd = sqrt(gamma_hat * h_vals), log = TRUE))
+  aic_val <- -2 * loglik + 2 * 3
+  bic_val <- -2 * loglik + log(n) * 3
+  
+  list(
+    Vmax = vmax_hat, Vmax_LCL = vmax_ci[1], Vmax_UCL = vmax_ci[2],
+    Km = km_hat, Km_LCL = km_ci[1], Km_UCL = km_ci[2],
+    Gamma = gamma_hat, AIC = aic_val, BIC = bic_val
+  )
+}
+
+# 4. 효소별 분석 실행
+run_analysis <- function(data) {
+  enzymes <- unique(data$enzyme)
+  results_list <- list()
+  
+  for (enz in enzymes) {
+    sub_data <- data[data$enzyme == enz, ]
+    sub_data <- sub_data[is.finite(sub_data$v_uM_per_min) & sub_data$s_uM > 0, ]
+    
+    x_val <- sub_data$s_uM
+    y_val <- sub_data$v_uM_per_min
+    
+    if(length(x_val) < 3) next # 데이터 부족 시 스킵
+    
+    for (m_name in names(models)) {
+      fit <- tryCatch(fit_mm_weighted(x_val, y_val, models[[m_name]]), 
+                      error = function(e) NULL)
+      
+      if (!is.null(fit)) {
+        results_list[[length(results_list) + 1]] <- data.frame(
+          Enzyme = enz,
+          Model = m_name,
+          Vmax = fit$Vmax,
+          Vmax_LCL = fit$Vmax_LCL,
+          Vmax_UCL = fit$Vmax_UCL,
+          Km = fit$Km,
+          Km_LCL = fit$Km_LCL,
+          Km_UCL = fit$Km_UCL,
+          Gamma = fit$Gamma,
+          AIC = fit$AIC,
+          BIC = fit$BIC
+        )
+      }
+    }
+  }
+  return(do.call(rbind, results_list))
+}
+
+# 5. 실행 및 결과 정리
+SDL_results <- run_analysis(df)
+
+# 효소별 랭킹 산출
+SDL_ranked <- SDL_results %>%
+  group_by(Enzyme) %>%
+  mutate(Rank = rank(AIC)) %>%
+  arrange(Enzyme, Rank)
+
+# 전체 요약표 생성 (CI 폭의 평균 등 추가 가능)
+SDL_table <- SDL_ranked %>%
+  group_by(Model) %>%
+  summarise(
+    Mean_AIC = mean(AIC),
+    Mean_BIC = mean(BIC),
+    Avg_Vmax = mean(Vmax),
+    Avg_Km   = mean(Km),
+    Best_Count = sum(Rank == 1)
+  ) %>%
+  arrange(Mean_AIC)
+
+# 최종 결과 출력
+cat("\n--- [1] 효소별 상세 분석 결과 (95% CI 포함) ---\n")
+# 가독성을 위해 일부 컬럼만 먼저 출력
+print(as.data.frame(SDL_ranked[, c("Enzyme", "Model", "Vmax", "Vmax_LCL", "Vmax_UCL", "Km", "Km_LCL", "Km_UCL", "AIC", "Rank")]), digits = 4)
+
+write.csv(SDL_ranked, file.path(real_data_table_dir, "real_data_table1_SDL_manuscript.csv"))
+write.csv(SDL_table, file.path(real_data_table_dir, "real_data_table1_SDL_summary.csv"))
+
+cat("\n--- [2] 분산 모델별 성능 요약 ---\n")
+print(as.data.frame(SDL_table), digits = 4)
+```
+
+
+# SDL 데이터 시각화
+```{r}
+library(ggplot2)
+
+# ==========================================================
+# Michaelis-Menten 시각화
+# ==========================================================
+
+# 1. 시각화용 데이터 준비
+# AIC 기준 가장 성능이 좋았던 모델을 선택: "x^(1/2)"
+target_model <- "x^(1/2)" 
+plot_grid_list <- list()
+target_model_label <- "S^(1/2)"
+
+# 분석 시 사용했던 데이터 필터링 (원본 데이터에서 이상치 제외 조건 동일 적용)
+df_clean <- df %>%
+  filter(is.finite(v_uM_per_min), s_uM > 0)
+
+for (enz in unique(df_clean$enzyme)) {
+  # 해당 효소와 선택한 모델의 파라미터 추출
+  params <- SDL_results %>% 
+    filter(Enzyme == enz, Model == target_model)
+  
+  if (nrow(params) == 0) next
+  
+  # X축 범위 설정: 해당 효소의 실제 최대 기질 농도의 1.1배까지
+  current_x_max <- max(df_clean$s_uM[df_clean$enzyme == enz], na.rm = TRUE)
+  x_seq <- seq(0, current_x_max * 1.1, length.out = 200)
+  
+  # 모델 예측값(Mean) 및 분산 가중치 함수에 따른 표준편차 계산
+  y_mean <- mm_mean(x_seq, params$Vmax, params$Km)
+  
+  # 선택된 모델의 h(x) 함수 적용 (분산 범위 계산용)
+  h_fun <- models[[target_model]]
+  y_sd <- sqrt(params$Gamma * h_fun(x_seq))
+  
+  plot_grid_list[[enz]] <- data.frame(
+    Enzyme = enz,
+    s_uM = x_seq,
+    v_pred = y_mean,
+    lower = pmax(0, y_mean - 1.96 * y_sd), # 음수 방지
+    upper = y_mean + 1.96 * y_sd
+  )
+}
+
+plot_data_smooth <- do.call(rbind, plot_grid_list)
+
+# Enzyme 컬럼의 factor 수준 일치 (데이터 매핑 오류 방지)
+df_clean$Enzyme <- factor(df_clean$enzyme)
+plot_data_smooth$Enzyme <- factor(plot_data_smooth$Enzyme)
+
+# 2. ggplot2 실행
+ggplot() +
+  # [Layer 1] 분산 범위 (Shade) - 95% 예측 구간
+  geom_ribbon(data = plot_data_smooth, 
+              aes(x = s_uM, ymin = lower, ymax = upper, group = Enzyme), 
+              fill = "darkgray", alpha = 0.2) +
+  
+  # [Layer 2] 모델 적합 곡선
+  geom_line(data = plot_data_smooth, 
+            aes(x = s_uM, y = v_pred, group = Enzyme), 
+            color = "black", 
+            linewidth = 1.0) +  # size 대신 linewidth, 두께를 1.0 정도로 강화 +
+  
+  # [Layer 3] 실제 측정 데이터 (반복 측정치 점으로 표시)
+  geom_point(data = df_clean, 
+             aes(x = s_uM, y = v_uM_per_min, color = Enzyme), 
+             alpha = 0.5, size = 1.0) +
+  
+  # 패널 분할 (효소별로 독립적인 스케일 적용)
+  facet_wrap(~Enzyme, scales = "free") +
+  
+  labs(
+    x = "Substrate concentration ([S], \u00b5M)",
+    y = "Reaction velocity (v, \u00b5M/min)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "gray95"),
+    panel.border = element_rect(color = "gray80", fill = NA)
+  )
+# 마지막으로 생성된 그래프를 고해상도로 저장
+ggsave(
+  filename = file.path(real_data_fig_dir, "chapter4_figure1_SDL_best.png"),
+  dpi = 300,              # 출판용 표준 해상도
+  width = 10,             # 가로 길이 (인치 단위)
+  height = 8,             # 세로 길이 (인치 단위)
+  bg = "white"            # 배경색 명시 (투명 방지)
+)
+```
+
+```{r}
+
+library(ggplot2)
+
+# ==========================================================
+# Michaelis-Menten 시각화
+# ==========================================================
+
+# 1. 시각화용 데이터 준비
+# AIC 기준 가장 성능이 안 좋았던 모델: "Standard_NLS"
+target_model <- "Standard_NLS" 
+plot_grid_list <- list()
+target_model_label <- "Standard NLS"
+
+# 분석 시 사용했던 데이터 필터링 (원본 데이터에서 이상치 제외 조건 동일 적용)
+df_clean <- df %>%
+  filter(is.finite(v_uM_per_min), s_uM > 0)
+
+for (enz in unique(df_clean$enzyme)) {
+  # 해당 효소와 선택한 모델의 파라미터 추출
+  params <- SDL_results %>% 
+    filter(Enzyme == enz, Model == target_model)
+  
+  if (nrow(params) == 0) next
+  
+  # X축 범위 설정: 해당 효소의 실제 최대 기질 농도의 1.1배까지
+  current_x_max <- max(df_clean$s_uM[df_clean$enzyme == enz], na.rm = TRUE)
+  x_seq <- seq(0, current_x_max * 1.1, length.out = 200)
+  
+  # 모델 예측값(Mean) 및 분산 가중치 함수에 따른 표준편차 계산
+  y_mean <- mm_mean(x_seq, params$Vmax, params$Km)
+  
+  # 선택된 모델의 h(x) 함수 적용 (분산 범위 계산용)
+  h_fun <- models[[target_model]]
+  y_sd <- sqrt(params$Gamma * h_fun(x_seq))
+  
+  plot_grid_list[[enz]] <- data.frame(
+    Enzyme = enz,
+    s_uM = x_seq,
+    v_pred = y_mean,
+    lower = pmax(0, y_mean - 1.96 * y_sd), # 음수 방지
+    upper = y_mean + 1.96 * y_sd
+  )
+}
+
+plot_data_smooth <- do.call(rbind, plot_grid_list)
+
+# Enzyme 컬럼의 factor 수준 일치 (데이터 매핑 오류 방지)
+df_clean$Enzyme <- factor(df_clean$enzyme)
+plot_data_smooth$Enzyme <- factor(plot_data_smooth$Enzyme)
+
+# 2. ggplot2 실행
+ggplot() +
+  # [Layer 1] 분산 범위 (Shade) - 95% 예측 구간
+  geom_ribbon(data = plot_data_smooth, 
+              aes(x = s_uM, ymin = lower, ymax = upper, group = Enzyme), 
+              fill = "darkgray", alpha = 0.2) +
+  
+  # [Layer 2] 모델 적합 곡선
+  geom_line(data = plot_data_smooth, 
+            aes(x = s_uM, y = v_pred, group = Enzyme), 
+            color = "black", linewidth = 1.0) +
+  
+  # [Layer 3] 실제 측정 데이터 (반복 측정치 점으로 표시)
+  geom_point(data = df_clean, 
+             aes(x = s_uM, y = v_uM_per_min, color = Enzyme), 
+             alpha = 0.5, size = 1.0) +
+  
+  # 패널 분할 (효소별로 독립적인 스케일 적용)
+  facet_wrap(~Enzyme, scales = "free") +
+  
+  labs(
+    x = "Substrate concentration ([S], \u00b5M)",
+    y = "Reaction velocity (v, \u00b5M/min)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "gray95"),
+    panel.border = element_rect(color = "gray80", fill = NA)
+  )
+ggsave(
+  filename = file.path(real_data_fig_dir, "chapter4_figure2_SDL_nls.png"),
+  dpi = 300,              # 출판용 표준 해상도
+  width = 10,             # 가로 길이 (인치 단위)
+  height = 8,             # 세로 길이 (인치 단위)
+  bg = "white"            # 배경색 명시 (투명 방지)
+)
+```
+
+
+# ==========================================================
+# Alves 데이터 분석
+# ==========================================================
+```{r}
+rm(list = setdiff(
+  ls(),
+  c(
+    "find_repo_root",
+    "project_root",
+    "data_raw_dir",
+    "data_processed_dir",
+    "real_data_results_dir",
+    "real_data_fig_dir",
+    "real_data_table_dir"
+  )
+))
+
+# ==========================================================
+# Michaelis-Menten Model Selection Framework
+# ==========================================================
+
+library(dplyr)
+
+# 1. 데이터 로드
+file_path <- file.path(data_raw_dir, "Alves_data.csv")
+df <- read.csv(file_path)
+
+# 단위가 포함된 첫 번째 행 제거 및 전처리
+df <- df[-1, ] %>%
+  mutate(
+    substrate_conc = as.numeric(substrate_conc),
+    activity = as.numeric(activity),
+    enzyme = as.character(enzyme)
+  ) %>%
+  # 결측치(-9999) 및 이상치 제거
+  filter(!is.na(substrate_conc), !is.na(activity)) %>%
+  filter(activity > 0, substrate_conc > 0)
+
+# 2. 모델 설정 (분산 가중치 함수 h(x) 4종)
+models <- list(
+  "log(x+1)"      = function(x) log(x + 1),
+  "x^(1/2)"       = function(x) x^0.5,
+  "x^(1/3)"       = function(x) x^(1/3),
+  "Standard_NLS"  = function(x) rep(1, length(x))
+)
+
+mm_mean <- function(x, vmax, km) { vmax * x / (km + x) }
+safe_pos <- function(x) { pmin(pmax(x, 1e-10), 1e10) }
+
+# 3. 핵심 적합 엔진 (CI 계산 포함)
+fit_mm_weighted <- function(x, y, h_fun) {
+  h_vals <- safe_pos(h_fun(x))
+  w <- 1 / h_vals
+  
+  score_fn <- function(km) {
+    sum(w * x * y / (km + x)) * sum(w * x^2 / (km + x)^3) - 
+      sum(w * x * y / (km + x)^2) * sum(w * x^2 / (km + x)^2)
+  }
+  
+  # Km 탐색 범위 설정
+  upper_limit <- max(x) * 5
+  grid <- exp(seq(log(1e-4), log(upper_limit), length.out = 200))
+  s_vals <- vapply(grid, score_fn, numeric(1))
+  idx <- which(diff(sign(s_vals)) != 0)
+  
+  km_hat <- if(length(idx) > 0) {
+    uniroot(score_fn, c(grid[idx[1]], grid[idx[1]+1]))$root 
+  } else {
+    optimize(function(k) score_fn(k)^2, c(1e-6, upper_limit))$minimum
+  }
+  
+  vmax_hat <- sum(w * x * y / (km_hat + x)) / sum(w * x^2 / (km_hat + x)^2)
+  mu_hat   <- mm_mean(x, vmax_hat, km_hat)
+  eps      <- y - mu_hat
+  gamma_hat <- mean(eps^2 / h_vals)
+  
+  # Confidence Interval (CI) 계산
+  n <- length(y); p <- 2; df_res <- n - p
+  j1 <- x / (km_hat + x)
+  j2 <- -vmax_hat * x / (km_hat + x)^2
+  J  <- cbind(j1, j2)
+  
+  W_mat <- diag(w)
+  info_mat <- t(J) %*% W_mat %*% J
+  cov_mat <- tryCatch(solve(info_mat) * gamma_hat, error = function(e) matrix(NA, 2, 2))
+  
+  if (!any(is.na(cov_mat))) {
+    se <- sqrt(pmax(0, diag(cov_mat)))
+    t_val <- qt(0.975, df_res)
+    vmax_ci <- c(vmax_hat - t_val * se[1], vmax_hat + t_val * se[1])
+    km_ci   <- c(km_hat - t_val * se[2], km_hat + t_val * se[2])
+  } else {
+    vmax_ci <- c(NA, NA); km_ci <- c(NA, NA)
+  }
+  
+  loglik <- sum(dnorm(y, mean = mu_hat, sd = sqrt(gamma_hat * h_vals), log = TRUE))
+  aic_val <- -2 * loglik + 2 * 3
+  bic_val <- -2 * loglik + log(n) * 3
+  
+  list(Vmax = vmax_hat, Vmax_LCL = vmax_ci[1], Vmax_UCL = vmax_ci[2],
+       Km = km_hat, Km_LCL = km_ci[1], Km_UCL = km_ci[2],
+       Gamma = gamma_hat, AIC = aic_val, BIC = bic_val)
+}
+
+# 4. 분석 실행
+results_list <- list()
+enzymes <- unique(df$enzyme)
+
+for (enz in enzymes) {
+  sub_data <- df[df$enzyme == enz, ]
+  x_val <- sub_data$substrate_conc
+  y_val <- sub_data$activity
+  if(length(x_val) < 3) next 
+  
+  for (m_name in names(models)) {
+    fit <- tryCatch(fit_mm_weighted(x_val, y_val, models[[m_name]]), error = function(e) NULL)
+    if (!is.null(fit)) {
+      results_list[[length(results_list) + 1]] <- data.frame(
+        Enzyme = enz, Model = m_name, Vmax = fit$Vmax, Vmax_LCL = fit$Vmax_LCL, 
+        Vmax_UCL = fit$Vmax_UCL, Km = fit$Km, Km_LCL = fit$Km_LCL, Km_UCL = fit$Km_UCL,
+        Gamma = fit$Gamma, AIC = fit$AIC, BIC = fit$BIC
+      )
+    }
+  }
+}
+
+Alves_results <- do.call(rbind, results_list)
+
+# 5. 랭킹 및 요약표 생성
+Alves_ranked <- Alves_results %>%
+  group_by(Enzyme) %>%
+  mutate(Rank = rank(AIC)) %>%
+  arrange(Enzyme, Rank)
+
+Alves_table <- Alves_ranked %>%
+  group_by(Model) %>%
+  summarise(
+    Mean_AIC = mean(AIC),
+    Mean_BIC = mean(BIC),
+    Avg_Vmax = mean(Vmax),
+    Avg_Km   = mean(Km),
+    Avg_Gamma = mean(Gamma),
+    Best_Count = sum(Rank == 1)
+  ) %>%
+  arrange(Mean_AIC)
+
+# 6. 결과 출력 및 저장
+cat("\n--- [분산 모델별 성능 요약 결과] ---\n")
+print(as.data.frame(Alves_table), digits = 4)
+
+# 파일 저장 경로를 본인의 환경에 맞게 수정하세요.
+write.csv(Alves_ranked, file.path(real_data_table_dir, "real_data_table2_Alves_manuscript.csv"), row.names = FALSE)
+write.csv(Alves_table, file.path(real_data_table_dir, "real_data_table2_Alves_summary.csv"), row.names = FALSE)
+```
+
+
+# Alves 데이터 시각화
+```{r}
+library(ggplot2)
+
+# 1. 시각화용 데이터 준비
+target_model <- "x^(1/2)"
+plot_grid_list <- list()
+target_model_label <- "S^(1/2)"
+
+global_x_max <- max(df$substrate_conc, na.rm = TRUE)
+
+for (enz in unique(df$enzyme)) {
+  params <- Alves_results %>% 
+    filter(Enzyme == enz, Model == target_model)
+  
+  if (nrow(params) == 0) next
+  
+  current_x_max <- max(df$substrate_conc[df$enzyme == enz], na.rm = TRUE)
+  x_seq <- seq(0, current_x_max * 1.1, length.out = 200)
+  
+  y_mean <- mm_mean(x_seq, params$Vmax, params$Km)
+  y_sd   <- sqrt(params$Gamma * (x_seq^0.5))
+  
+  plot_grid_list[[enz]] <- data.frame(
+    Enzyme = enz,
+    substrate_conc = x_seq,
+    v_pred = y_mean,
+    lower = pmax(0, y_mean - 1.96 * y_sd),
+    upper = y_mean + 1.96 * y_sd
+  )
+}
+
+plot_data_smooth <- do.call(rbind, plot_grid_list)
+
+# [중요] Enzyme 컬럼의 factor 수준을 일치시켜 매핑 오류 방지
+df$Enzyme <- factor(df$enzyme)
+plot_data_smooth$Enzyme <- factor(plot_data_smooth$Enzyme)
+
+# 2. ggplot2 실행
+ggplot() +
+  # [Layer 1] 분산 범위 (Shade) - plot_data_smooth 사용 (Enzyme별 분리)
+  geom_ribbon(data = plot_data_smooth, 
+              aes(x = substrate_conc, ymin = lower, ymax = upper, group = Enzyme), 
+              fill = "darkgray", alpha = 0.2) +
+  
+  # [Layer 2] 모델 적합 곡선 - plot_data_smooth 사용 (Enzyme별 분리)
+  geom_line(data = plot_data_smooth, 
+            aes(x = substrate_conc, y = v_pred, group = Enzyme), 
+            color = "black", linewidth = 1.0) +
+  
+  # [Layer 3] 실제 측정 데이터 - df 사용 (Enzyme 컬럼을 통해 패널별로 확실히 분리)
+  # aes 안에 enzyme을 명시적으로 매핑하여 다른 패널에 점이 침범하지 않도록 함
+  geom_point(data = df, 
+             aes(x = substrate_conc, y = activity, color = Enzyme), 
+             alpha = 0.5, size = 0.5) +
+  
+  # 패널 분할 (scales = "free" 유지하여 각 효소별 농도 범위를 최적화)
+  facet_wrap(~Enzyme, scales = "free") +
+  
+  labs(
+    x = "Substrate concentration ([S], \u00b5M)",
+    y = "Activity (v, nmol/g dry soil/h)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none", # 점 색상 범례는 불필요하므로 제거
+    strip.background = element_rect(fill = "gray95"),
+    panel.border = element_rect(color = "gray80", fill = NA)
+  )
+ggsave(
+  filename = file.path(real_data_fig_dir, "chapter4_figure3_Alves_best.png"),
+  dpi = 300,              # 출판용 표준 해상도
+  width = 10,             # 가로 길이 (인치 단위)
+  height = 8,             # 세로 길이 (인치 단위)
+  bg = "white"            # 배경색 명시 (투명 방지)
+)
+```
+
+```{r}
+library(ggplot2)
+
+# 1. 시각화용 데이터 준비
+target_model <- "Standard_NLS"
+plot_grid_list <- list()
+target_model_label <- "Standard NLS"
+
+global_x_max <- max(df$substrate_conc, na.rm = TRUE)
+
+for (enz in unique(df$enzyme)) {
+  params <- Alves_results %>% 
+    filter(Enzyme == enz, Model == target_model)
+  
+  if (nrow(params) == 0) next
+  
+  current_x_max <- max(df$substrate_conc[df$enzyme == enz], na.rm = TRUE)
+  x_seq <- seq(0, current_x_max * 1.1, length.out = 200)
+  
+  y_mean <- mm_mean(x_seq, params$Vmax, params$Km)
+  y_sd   <- sqrt(params$Gamma * (x_seq^0.5))
+  
+  plot_grid_list[[enz]] <- data.frame(
+    Enzyme = enz,
+    substrate_conc = x_seq,
+    v_pred = y_mean,
+    lower = pmax(0, y_mean - 1.96 * y_sd),
+    upper = y_mean + 1.96 * y_sd
+  )
+}
+
+plot_data_smooth <- do.call(rbind, plot_grid_list)
+
+# [중요] Enzyme 컬럼의 factor 수준을 일치시켜 매핑 오류 방지
+df$Enzyme <- factor(df$enzyme)
+plot_data_smooth$Enzyme <- factor(plot_data_smooth$Enzyme)
+
+# 2. ggplot2 실행
+ggplot() +
+  # [Layer 1] 분산 범위 (Shade) - plot_data_smooth 사용 (Enzyme별 분리)
+  geom_ribbon(data = plot_data_smooth, 
+              aes(x = substrate_conc, ymin = lower, ymax = upper, group = Enzyme), 
+              fill = "darkgray", alpha = 0.2) +
+  
+  # [Layer 2] 모델 적합 곡선 - plot_data_smooth 사용 (Enzyme별 분리)
+  geom_line(data = plot_data_smooth, 
+            aes(x = substrate_conc, y = v_pred, group = Enzyme), 
+            color = "black", linewidth = 1.0) +
+  
+  # [Layer 3] 실제 측정 데이터 - df 사용 (Enzyme 컬럼을 통해 패널별로 확실히 분리)
+  # aes 안에 enzyme을 명시적으로 매핑하여 다른 패널에 점이 침범하지 않도록 함
+  geom_point(data = df, 
+             aes(x = substrate_conc, y = activity, color = Enzyme), 
+             alpha = 0.5, size = 0.5) +
+  
+  # 패널 분할 (scales = "free" 유지하여 각 효소별 농도 범위를 최적화)
+  facet_wrap(~Enzyme, scales = "free") +
+  
+  labs(
+    x = "Substrate concentration ([S], \u00b5M)",
+    y = "Activity (v, nmol/g dry soil/h)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none", # 점 색상 범례는 불필요하므로 제거
+    strip.background = element_rect(fill = "gray95"),
+    panel.border = element_rect(color = "gray80", fill = NA)
+  )
+ggsave(
+  filename = file.path(real_data_fig_dir, "chapter4_figure4_Alves_nls.png"),
+  dpi = 300,              # 출판용 표준 해상도
+  width = 10,             # 가로 길이 (인치 단위)
+  height = 8,             # 세로 길이 (인치 단위)
+  bg = "white"            # 배경색 명시 (투명 방지)
+)
+```
+

@@ -1,0 +1,5 @@
+"model","label"
+"NLS","NLS"
+"Semi_log","Semi: log(x+1)"
+"Semi_x_half","Semi: x^(1/2)"
+"Semi_x_third","Semi: x^(1/3)"
