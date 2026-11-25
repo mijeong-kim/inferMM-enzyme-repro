@@ -1,0 +1,77 @@
+{
+  "status": "PASS_WITH_ENVIRONMENT_NOTE",
+  "completed_utc": "2026-11-20T08:42:32.754613+00:00",
+  "package_version": "0.1.2",
+  "checked_archive": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2.tar.gz",
+  "archive_sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+  "archive_bytes": 149506,
+  "changes": [
+    "Dynamic installed-version CITATION",
+    "Canonical DOI markup in six help pages",
+    "NEWS entries for citation and DOI corrections"
+  ],
+  "source_diff": {
+    "sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+    "bytes": 149506,
+    "changed_tar_members": [
+      "inferMM/DESCRIPTION",
+      "inferMM/NEWS.md",
+      "inferMM/inst/CITATION",
+      "inferMM/man/alves_demo.Rd",
+      "inferMM/man/cluster_mm.Rd",
+      "inferMM/man/fit_mm.Rd",
+      "inferMM/man/fit_mm_moments.Rd",
+      "inferMM/man/inferMM-package.Rd",
+      "inferMM/man/sdl_demo.Rd"
+    ],
+    "generated_help_database_added": [
+      "inferMM/build/partial.rdb"
+    ],
+    "R_data_tests_NAMESPACE_byte_identical": true,
+    "tar_file_count": 51
+  },
+  "estimation_code_data_tests_NAMESPACE_unchanged": true,
+  "manual": {
+    "path": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2_manual.pdf",
+    "bytes": 230819,
+    "sha256": "f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc",
+    "pages": 26,
+    "canonical_Rd_DOIs": true,
+    "visual_QA": "PASS: all 26 pages and sensitive DOI reference pages reviewed",
+    "visual_review": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/pdf_qa/pdf_visual_review_final.json",
+    "renderer": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/render_manual_preserve_doi_hyphens.py",
+    "local_renderer_workaround": "Restore visible literal hyphens only in transient DOI LaTeX labels; package source retains canonical DOI markup."
+  },
+  "checks": {
+    "command": "R CMD check --as-cran --run-donttest inferMM_0.1.2.tar.gz",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 0,
+    "notes": 1,
+    "tests": {
+      "fail": 0,
+      "warn": 0,
+      "skip": 0,
+      "pass": 694
+    },
+    "CRAN_incoming_online": "OK",
+    "examples": "OK including --run-donttest",
+    "vignette_creation_and_rebuild": "OK",
+    "PDF_manual": "OK",
+    "note": "HTML validation skipped: recent HTML Tidy and R package V8 unavailable locally.",
+    "online_controls": {
+      "_R_CHECK_CRAN_INCOMING_": "true",
+      "_R_CHECK_CRAN_INCOMING_REMOTE_": "true",
+      "_R_CHECK_SYSTEM_CLOCK_": "true"
+    },
+    "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM.Rcheck/00check.log",
+    "platform": {
+      "R": "4.6.1",
+      "system": "macOS 15.6.1",
+      "architecture": "aarch64-apple-darwin23"
+    },
+    "current_candidate_Windows_or_R_devel_check_performed": false
+  },
+  "CRAN_submission_performed": false,
+  "remote_check_upload_performed": false
+}

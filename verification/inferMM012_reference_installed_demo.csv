@@ -1,0 +1,3 @@
+"dataset","rows","groups","installed_version","installed_R_and_CSV_agree","installed_help_has_source_and_DOI"
+"sdl_demo",192,6,"0.1.2",TRUE,TRUE
+"alves_demo",247,3,"0.1.2",TRUE,TRUE

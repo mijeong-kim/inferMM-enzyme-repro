@@ -1,0 +1,352 @@
+{
+  "current_package": {
+    "name": "inferMM",
+    "version": "0.1.2",
+    "archive": "packages/inferMM_0.1.2.tar.gz",
+    "bytes": 149506,
+    "sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+    "library": "library012"
+  },
+  "archived_full_simulation_package": "inferMM0.1.1; original session information, seeds, expected outputs and package_build.csv preserved",
+  "estimation_R_files_byte_identical_011_012": 10,
+  "frozen_SDL_simulation_levels_uM": [
+    7.8125,
+    15.625,
+    31.25,
+    62.5,
+    125,
+    250,
+    500
+  ],
+  "SDL28_observations": 28,
+  "SDL56_observations": 56,
+  "package_demo_rows": 192,
+  "real_observed_rows": 192,
+  "rows_per_variant": 32,
+  "numeric_checks": [
+    {
+      "check": "single50_012_vs_011",
+      "rows": "48",
+      "columns": "18",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "single100_012_vs_011",
+      "rows": "48",
+      "columns": "18",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "alves_3cluster_012_vs_011",
+      "rows": "40",
+      "columns": "19",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "alves_6cluster_012_vs_011",
+      "rows": "40",
+      "columns": "19",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "SDL_template_subset_012_vs_011",
+      "rows": "6",
+      "columns": "4",
+      "max_absolute_difference": "5.6843418860808e-14",
+      "max_relative_difference": "8.4172579834227e-16",
+      "status": "PASS"
+    },
+    {
+      "check": "benchmark_012_vs_011",
+      "rows": "1120",
+      "columns": "17",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "benchmark_012_vs_archived_prefix",
+      "rows": "1120",
+      "columns": "17",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "matched_012_vs_011",
+      "rows": "460",
+      "columns": "32",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "matched_012_vs_archived_prefix",
+      "rows": "460",
+      "columns": "32",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "higher_moment_012_vs_archived_prefix",
+      "rows": "240",
+      "columns": "26",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "real_012_vs_corrected011_real_data_table1_SDL_manuscript.csv",
+      "rows": "24",
+      "columns": "13",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "real_012_vs_corrected011_real_data_table1_SDL_summary.csv",
+      "rows": "4",
+      "columns": "7",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "real_012_vs_corrected011_real_data_table2_Alves_manuscript.csv",
+      "rows": "12",
+      "columns": "12",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "real_012_vs_corrected011_real_data_table2_Alves_summary.csv",
+      "rows": "4",
+      "columns": "7",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    },
+    {
+      "check": "real_012_vs_corrected011_real_data_table3_combined_summary.csv",
+      "rows": "8",
+      "columns": "6",
+      "max_absolute_difference": "0",
+      "max_relative_difference": "0",
+      "status": "PASS"
+    }
+  ],
+  "bootstrap_smoke": {
+    "sample_sizes": [
+      20,
+      30
+    ],
+    "resamples_per_dataset": 399,
+    "bootstrap_refits": 798,
+    "reference": "expected/bootstrap first documented dataset at each n",
+    "status": "PASS"
+  },
+  "projected_example": {
+    "methods": [
+      "profile",
+      "projected"
+    ],
+    "reference": "expected/projected/illustration_comparison.csv",
+    "status": "PASS"
+  },
+  "final_archive_installed_demo_check": "verification/inferMM012_default_screen_update.json",
+  "active_repo_real_tables_byte_identical": {
+    "real_data_table1_SDL_summary.csv": true,
+    "real_data_table2_Alves_manuscript.csv": true,
+    "real_data_table1_SDL_manuscript.csv": true,
+    "real_data_table2_Alves_summary.csv": true,
+    "real_data_table3_combined_summary.csv": true
+  },
+  "numeric_validation_candidate_sha256": "39a1579a4d3258e640065177e8ee2e8947226745971884b0c0e2697c51705fb4",
+  "candidate_vs_final_estimation_R_and_demo_bytes_identical": true,
+  "candidate_vs_final_differing_members": [
+    "inferMM/DESCRIPTION",
+    "inferMM/README.md",
+    "inferMM/data-raw/README.md",
+    "inferMM/data-raw/prepare_sdl_demo.R",
+    "inferMM/inst/data-raw/README.md",
+    "inferMM/inst/data-raw/prepare_sdl_demo.R",
+    "inferMM/inst/doc/infer-mm-workflow.Rmd",
+    "inferMM/inst/doc/infer-mm-workflow.html",
+    "inferMM/man/sdl_demo.Rd",
+    "inferMM/vignettes/infer-mm-workflow.Rmd"
+  ],
+  "coverage_scope": "Bounded deterministic checks assess compatibility, not new full empirical-coverage simulations. Archived simulation values and timing records remain their original0.1.1 execution results.",
+  "timing_columns_excluded_from_numeric_comparisons": true,
+  "logical_TRUE_FALSE_and_numeric_1_0_normalized_for_archived_CSV_comparison": true,
+  "final_package_check": {
+    "pass": 694,
+    "fail": 0,
+    "warnings": 0,
+    "skips": 0,
+    "R_CMD_check_errors": 0,
+    "R_CMD_check_warnings": 0,
+    "R_CMD_check_notes": 0,
+    "report": "verification/inferMM012_package_check.json"
+  },
+  "candidate_vs_final_record_scope": "Original numeric-validation candidate and its original final 0.1.2 packaging comparison (final archive SHA256 56d49880618962d8c4801bc60d55c5d8d894965fd61419520b7308be18f608bd). These recorded checks are preserved. The later documentation-only reference update is recorded separately below.",
+  "documentation_reference_update": {
+    "date": "2026-11-20",
+    "previous_012_archive_sha256": "56d49880618962d8c4801bc60d55c5d8d894965fd61419520b7308be18f608bd",
+    "current_012_archive_sha256": "7ea1dd88f4ed49d78d1b82e52601a8beca9384e5e61228587b4ec64262d58a1b",
+    "R_NAMESPACE_and_R_CSV_data_byte_identical_to_previous_012": true,
+    "manual": "docs/inferMM_0.1.2_manual.pdf",
+    "manual_sha256": "4fa95e478ce01b3e8d7ebbc8d5ba009a9926194707f92f3598c40cd12af65a91",
+    "verification": "verification/inferMM012_reference_update.json",
+    "new_simulations_or_real_data_refits_required": false
+  },
+  "method_reference_update": {
+    "date": "2026-11-20",
+    "scope": "Documentation-only method-reference update; analysis code/data/results unchanged",
+    "previous_012_archive_sha256": "7ea1dd88f4ed49d78d1b82e52601a8beca9384e5e61228587b4ec64262d58a1b",
+    "current_012_archive_sha256": "f084f505bfa5a99fda2df60a5eb70835fb337c16f466b0df6acb4ecd88aaf07a",
+    "current_archive_bytes": 131483,
+    "manual": "docs/inferMM_0.1.2_manual.pdf",
+    "manual_sha256": "2a36b4cef8e236a4bffc61ed3d3e02e519b0297b9d878a2745b977a0832afa8c",
+    "manual_pages": 25,
+    "verification": "verification/inferMM012_method_reference_update.json",
+    "R_NAMESPACE_and_R_CSV_data_byte_identical_to_previous_012": true,
+    "screen_mm_help_byte_identical_to_previous_012": true,
+    "AIC_BIC_reference_additions_omitted_per_user_request": true,
+    "new_simulation_or_real_data_refits": false
+  },
+  "historical_candidate_estimation_R_files_byte_identical_011_012": 12,
+  "historical_candidate_code_identity_scope": "The previous value of 12 records the initial 0.1.2 candidate and its documentation-only builds, including archive f084f505bfa5a99fda2df60a5eb70835fb337c16f466b0df6acb4ecd88aaf07a. The original code-identity CSV is retained as historical evidence. The current default-screen build changes fit_mm.R and methods.R; ten other R files and the numerical definitions listed in default_screen_update remain unchanged.",
+  "historical_initial_012_package_check": {
+    "pass": 598,
+    "fail": 0,
+    "warnings": 0,
+    "skips": 0,
+    "R_CMD_check_errors": 0,
+    "R_CMD_check_warnings": 0,
+    "R_CMD_check_notes": 1,
+    "note": "Local HTML Tidy/V8 environment limitation",
+    "report": "verification/inferMM012_package_check.json"
+  },
+  "historical_final_archive_installed_demo_check": "verification/inferMM012_demo_check.csv",
+  "numeric_checks_record_scope": "Original paired checks for numeric-validation candidate 39a1579a4d3258e640065177e8ee2e8947226745971884b0c0e2697c51705fb4; original records are unchanged. Current explicit-variance behavior and the default selector are verified separately in default_screen_update and the current package check.",
+  "default_screen_update": {
+    "date": "2026-11-20",
+    "scope": "Unreleased 0.1.2 default-screening interface update",
+    "previous_012_archive_sha256": "f084f505bfa5a99fda2df60a5eb70835fb337c16f466b0df6acb4ecd88aaf07a",
+    "current_012_archive_sha256": "9fd566c1f19d38b00db5d43478bf823d76cd057d6894da2725427e98e9685abe",
+    "current_archive_bytes": 149383,
+    "manual": {
+      "path": "docs/inferMM_0.1.2_manual.pdf",
+      "pages": 26,
+      "sha256": "d476e295ace394d4438001c7135ffb7c27cd9f1d8b0418b535ecc978b6e2fe33"
+    },
+    "changed_R_files": [
+      "inferMM/R/fit_mm.R",
+      "inferMM/R/methods.R"
+    ],
+    "unchanged_R_files_sha256": {
+      "inferMM/R/clustered.R": "e3e116992ea1d2372819ab2d960628436198a23375c06650a3c300d05e994da3",
+      "inferMM/R/clustered_projected.R": "576dce4e79bd8825d496d2c0be5377821c7e6b410ea0391e4a88e947f6af660d",
+      "inferMM/R/grouped.R": "9f1618e560d3c138877c9d20f8c1cdbf59256bf29dda28bc585f0fa7dc70f4cb",
+      "inferMM/R/moments.R": "651739afbb3578dd241f7f25e246c9693e2aaabf13c46ad67bc9268ef43e25d9",
+      "inferMM/R/profile.R": "7710cc8e744f29b42904187e3bc33cd14b44a1cb14b9396fe0d019d9cb575745",
+      "inferMM/R/report_mm.R": "dc4a756ac68871f608f92b17aa20e491e5cb1f6d2e8a0a0994ecc8602712a179",
+      "inferMM/R/screen.R": "6b9fc970be8851dc2f36ab3d26212d3c3194747d6bd130cb3bd368139d04ddb4",
+      "inferMM/R/simulate.R": "87ff1eeb9e928421220ab71f919826212593523cbd2a74f3acf76be8a03d3678",
+      "inferMM/R/utils.R": "2f327dfcb09a78e80d191d225e650b07fae40c8c5dd94c0fbcfef0312e4befd6",
+      "inferMM/R/variance.R": "29cdb669ade2903680e0874c3d65e3399aea3fd7c07eaa35d22604a5cf187511"
+    },
+    "unchanged_R_file_count": 10,
+    "numerical_and_existing_S3_function_definition_SHA256": {
+      "confint.fit_mm": "f3ed7f0a1da961654c78249be17058c7c848de4aae019aa7b033b19225fd0856",
+      "weighted_vmax_hat": "9d2efaf857fe232bcd59b5f6c9ed3ff918391da69d71727f7e5a6bcc8d715bc9",
+      "fit_mm_from_spec": "429546e55b574b4e64711c2f728b94a37e148b88a03f0671d0ab98b1e16492de",
+      "search_auto_variance": "6896a4ec6b998d8f266496aaa39fde948d53c7d208b92d50209648e0872fbd53",
+      "predict.fit_mm": "712fd3b0bdad3f7d4fe07bbc1b661b21ce2e758813eea0ce4979079d4a054027",
+      "fit_mm_weighted": "b4169e16e33958dfb962ec3c9f469254b3ca467bab5f095e15e25f7f604d5fd8",
+      "plot.fit_mm": "38d2d4193b3dd556e551c70efd738af05117a7761c4b0164d75cc7d9d7af92ad",
+      "coef.fit_mm": "619e5bbafe781870892d50ba5770d86890ad2cacf0886bc846ffbb44e43583ad",
+      "weighted_score_function": "4cb9a5bc5ac0792f031133cb4c72994c650d2f5f6ba5dabd40ee2196c762bb84",
+      "vcov.fit_mm": "f2c3ee62eeba26a90c54d2133fe7df31ee8fac7ae7733fcd08b33179c770c9b8"
+    },
+    "NAMESPACE_demo_data_and_existing_tests_byte_identical": true,
+    "default_variance": "screen",
+    "fixed_candidates": [
+      "constant",
+      "log",
+      "sqrt",
+      "cuberoot"
+    ],
+    "default_criterion": "quasi_aic",
+    "retained_auto": "log plus fixed-power grid",
+    "explicit_variance_paths_and_computational_estimating_functions_unchanged": true,
+    "screen_bootstrap_policy": "Selected variance shape remains fixed for conditional inference",
+    "print_summary_only": true,
+    "production_fit_calls_all_explicit_variance": true,
+    "historical_execution_and_timing_records_preserved": true,
+    "full_simulation_or_timing_rerun": false,
+    "verification": "verification/inferMM012_default_screen_update.json"
+  },
+  "cran_preflight_update": {
+    "date": "2026-11-20",
+    "scope": "Citation, canonical DOI documentation and PDF rendering metadata only",
+    "current_archive_sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+    "current_archive_bytes": 149506,
+    "preceding_archive_sha256": "9fd566c1f19d38b00db5d43478bf823d76cd057d6894da2725427e98e9685abe",
+    "manual": {
+      "path": "docs/inferMM_0.1.2_manual.pdf",
+      "sha256": "f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc",
+      "pages": 26
+    },
+    "checks": {
+      "command": "R CMD check --as-cran --run-donttest inferMM_0.1.2.tar.gz",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "tests": {
+        "fail": 0,
+        "warn": 0,
+        "skip": 0,
+        "pass": 694
+      },
+      "CRAN_incoming_online": "OK",
+      "examples": "OK including --run-donttest",
+      "vignette_creation_and_rebuild": "OK",
+      "PDF_manual": "OK",
+      "note": "HTML validation skipped: recent HTML Tidy and R package V8 unavailable locally.",
+      "online_controls": {
+        "_R_CHECK_CRAN_INCOMING_": "true",
+        "_R_CHECK_CRAN_INCOMING_REMOTE_": "true",
+        "_R_CHECK_SYSTEM_CLOCK_": "true"
+      },
+      "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM.Rcheck/00check.log",
+      "platform": {
+        "R": "4.6.1",
+        "system": "macOS 15.6.1",
+        "architecture": "aarch64-apple-darwin23"
+      },
+      "current_candidate_Windows_or_R_devel_check_performed": false
+    },
+    "record": "verification/cran_preflight_20261120/final_report.json",
+    "source_diff": "verification/cran_preflight_20261120/source_diff.json",
+    "renderer": "verification/cran_preflight_20261120/render_manual_preserve_doi_hyphens.py",
+    "original_renderer_sha256": "fddb7e0ad717ca9821ba7ba5fb80329d0f52128938eb4a0b3b68577805162073",
+    "distributed_renderer_sha256": "0c43c35fde25f9dff5ec3ed9f8acb837cb8ebc348ac9b2e60b1fa4a808a71dbe",
+    "estimation_R_tests_data_NAMESPACE_unchanged": true,
+    "historical_simulation_reference_records_preserved": true,
+    "original_analysis_results_and_timing_unchanged": true,
+    "full_simulation_rerun": false,
+    "CRAN_submission_performed": false
+  }
+}

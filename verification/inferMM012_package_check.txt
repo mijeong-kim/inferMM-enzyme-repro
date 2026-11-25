@@ -1,0 +1,10 @@
+PASS WITH ENVIRONMENT NOTE — inferMM 0.1.2 online CRAN preflight
+Archive: 149506 bytes; SHA256 8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05
+Manual: 26 pages; SHA256 f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc
+R CMD check --as-cran --run-donttest (online incoming and PDF enabled): 0 errors, 0 warnings, 1 NOTE.
+NOTE: recent HTML Tidy and V8 unavailable for optional HTML/math validation.
+694 tests passed; no failures, warnings or skips; examples and vignette rebuild passed.
+Dynamic version citation and canonical DOI help corrected; all R/data/tests/NAMESPACE unchanged.
+Shared PDF renderer restores visible DOI hyphens; canonical Rd and DOI targets retained.
+Checked locally on macOS ARM / R 4.6.1; no new Windows or R-devel remote check.
+No CRAN submission or remote check upload performed.

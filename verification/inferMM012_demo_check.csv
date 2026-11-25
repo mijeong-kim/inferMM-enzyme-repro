@@ -1,0 +1,2 @@
+"package","version","rows","variants","concentrations","minimum_concentration","maximum_concentration","rows_per_variant","source_rate_max_abs_difference","external_demo_max_abs_difference","installed_csv_matches_final_tar"
+"inferMM","0.1.2",192,6,8,3.90625,500,32,6.21724893790088e-15,4.88498130835069e-15,TRUE

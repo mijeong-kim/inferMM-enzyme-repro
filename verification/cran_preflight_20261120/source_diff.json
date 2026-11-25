@@ -1,0 +1,20 @@
+{
+  "sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+  "bytes": 149506,
+  "changed_tar_members": [
+    "inferMM/DESCRIPTION",
+    "inferMM/NEWS.md",
+    "inferMM/inst/CITATION",
+    "inferMM/man/alves_demo.Rd",
+    "inferMM/man/cluster_mm.Rd",
+    "inferMM/man/fit_mm.Rd",
+    "inferMM/man/fit_mm_moments.Rd",
+    "inferMM/man/inferMM-package.Rd",
+    "inferMM/man/sdl_demo.Rd"
+  ],
+  "generated_help_database_added": [
+    "inferMM/build/partial.rdb"
+  ],
+  "R_data_tests_NAMESPACE_byte_identical": true,
+  "tar_file_count": 51
+}

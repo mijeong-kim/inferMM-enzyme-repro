@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "pages": 26,
+  "pdf": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2_manual.pdf",
+  "bytes": 230819,
+  "sha256": "f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc",
+  "renderer_helper": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/render_manual_preserve_doi_hyphens.py",
+  "visual_review": {
+    "all_page_contacts": [
+      "final-contact_01.png",
+      "final-contact_02.png",
+      "final-contact_03.png"
+    ],
+    "reference_pages": [
+      2,
+      3,
+      7,
+      12,
+      16,
+      23
+    ],
+    "hyphen_sensitive_pages": [
+      2,
+      7,
+      12,
+      16,
+      23
+    ],
+    "result": "PASS: full DOI IDs display correctly; page numbering, margins, references, equations and examples remain legible without clipping or overlap."
+  },
+  "content_and_link_validation": {
+    "status": "PASS",
+    "pages": 26,
+    "all_other_text_unchanged": true,
+    "DOI_hyphens_restored": {
+      "2": [
+        "10.1007/s10463-011-0332-y",
+        "10.1111/j.1467-9868.2010.00741.x"
+      ],
+      "7": [
+        "10.1111/j.1467-9868.2010.00741.x"
+      ],
+      "12": [
+        "10.1007/s10463-011-0332-y"
+      ],
+      "16": [
+        "10.1007/s10463-011-0332-y"
+      ],
+      "23": [
+        "10.1038/s44286-023-00002-4"
+      ]
+    },
+    "all_hyperlink_targets_unchanged": true,
+    "hyperlink_count": 18
+  },
+  "scope": {
+    "canonical_package_Rd_unchanged": true,
+    "all_package_source_files_unchanged": true,
+    "no_global_R_installation_or_namespace_changes": true,
+    "only_transient_DOI_label_tokens_changed": true,
+    "labels_corrected": 6,
+    "literal_hyphens_restored": 14
+  },
+  "original_stock_PDF": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/pdf_qa/manual_before_hyphen_render_fix.pdf"
+}

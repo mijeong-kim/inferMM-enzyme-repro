@@ -1,0 +1,18 @@
+This is an update to inferMM 0.1.1, published on 2026-10-30.
+
+This update is being submitted earlier than the usual release interval to correct the
+omitted lowest-concentration observations in the bundled SDL dataset. sdl_demo now
+contains 192 reaction-level rates: six enzyme variants, eight concentrations, and
+four reactions per concentration. Data provenance and preparation are documented.
+
+The update also adds default screening of four fixed working variance shapes in
+fit_mm(). Explicitly specified shapes retain their previous calculations; setting
+variance="log" preserves the former default. The separate log/power-grid "auto"
+option is retained. Package citation versions and DOI markup have been corrected.
+
+Tested on macOS 15.6.1 (ARM), R 4.6.1, using R CMD check --as-cran --run-donttest.
+There are 0 errors, 0 warnings and 1 environmental NOTE. The CRAN incoming check,
+examples, 694 tests, vignette rebuilding and PDF manual check passed.
+The NOTE reports that recent HTML Tidy and the R package V8 are unavailable locally,
+so optional HTML validation and math-rendering checks were skipped.
+No current-candidate Windows or R-devel remote check has been performed.

@@ -1,0 +1,186 @@
+{
+  "date": "2026-11-20",
+  "scope": "Unreleased 0.1.2 default-screening interface update",
+  "previous_012_archive_sha256": "f084f505bfa5a99fda2df60a5eb70835fb337c16f466b0df6acb4ecd88aaf07a",
+  "current_012_archive_sha256": "9fd566c1f19d38b00db5d43478bf823d76cd057d6894da2725427e98e9685abe",
+  "current_archive_bytes": 149383,
+  "manual": {
+    "path": "docs/inferMM_0.1.2_manual.pdf",
+    "pages": 26,
+    "sha256": "d476e295ace394d4438001c7135ffb7c27cd9f1d8b0418b535ecc978b6e2fe33"
+  },
+  "changed_R_files": [
+    "inferMM/R/fit_mm.R",
+    "inferMM/R/methods.R"
+  ],
+  "unchanged_R_files_sha256": {
+    "inferMM/R/clustered.R": "e3e116992ea1d2372819ab2d960628436198a23375c06650a3c300d05e994da3",
+    "inferMM/R/clustered_projected.R": "576dce4e79bd8825d496d2c0be5377821c7e6b410ea0391e4a88e947f6af660d",
+    "inferMM/R/grouped.R": "9f1618e560d3c138877c9d20f8c1cdbf59256bf29dda28bc585f0fa7dc70f4cb",
+    "inferMM/R/moments.R": "651739afbb3578dd241f7f25e246c9693e2aaabf13c46ad67bc9268ef43e25d9",
+    "inferMM/R/profile.R": "7710cc8e744f29b42904187e3bc33cd14b44a1cb14b9396fe0d019d9cb575745",
+    "inferMM/R/report_mm.R": "dc4a756ac68871f608f92b17aa20e491e5cb1f6d2e8a0a0994ecc8602712a179",
+    "inferMM/R/screen.R": "6b9fc970be8851dc2f36ab3d26212d3c3194747d6bd130cb3bd368139d04ddb4",
+    "inferMM/R/simulate.R": "87ff1eeb9e928421220ab71f919826212593523cbd2a74f3acf76be8a03d3678",
+    "inferMM/R/utils.R": "2f327dfcb09a78e80d191d225e650b07fae40c8c5dd94c0fbcfef0312e4befd6",
+    "inferMM/R/variance.R": "29cdb669ade2903680e0874c3d65e3399aea3fd7c07eaa35d22604a5cf187511"
+  },
+  "unchanged_R_file_count": 10,
+  "numerical_and_existing_S3_function_definition_SHA256": {
+    "confint.fit_mm": "f3ed7f0a1da961654c78249be17058c7c848de4aae019aa7b033b19225fd0856",
+    "weighted_vmax_hat": "9d2efaf857fe232bcd59b5f6c9ed3ff918391da69d71727f7e5a6bcc8d715bc9",
+    "fit_mm_from_spec": "429546e55b574b4e64711c2f728b94a37e148b88a03f0671d0ab98b1e16492de",
+    "search_auto_variance": "6896a4ec6b998d8f266496aaa39fde948d53c7d208b92d50209648e0872fbd53",
+    "predict.fit_mm": "712fd3b0bdad3f7d4fe07bbc1b661b21ce2e758813eea0ce4979079d4a054027",
+    "fit_mm_weighted": "b4169e16e33958dfb962ec3c9f469254b3ca467bab5f095e15e25f7f604d5fd8",
+    "plot.fit_mm": "38d2d4193b3dd556e551c70efd738af05117a7761c4b0164d75cc7d9d7af92ad",
+    "coef.fit_mm": "619e5bbafe781870892d50ba5770d86890ad2cacf0886bc846ffbb44e43583ad",
+    "weighted_score_function": "4cb9a5bc5ac0792f031133cb4c72994c650d2f5f6ba5dabd40ee2196c762bb84",
+    "vcov.fit_mm": "f2c3ee62eeba26a90c54d2133fe7df31ee8fac7ae7733fcd08b33179c770c9b8"
+  },
+  "NAMESPACE_demo_data_and_existing_tests_byte_identical": true,
+  "default_variance": "screen",
+  "fixed_candidates": [
+    "constant",
+    "log",
+    "sqrt",
+    "cuberoot"
+  ],
+  "default_criterion": "quasi_aic",
+  "retained_auto": "log plus fixed-power grid",
+  "explicit_variance_paths_and_computational_estimating_functions_unchanged": true,
+  "screen_bootstrap_policy": "Selected variance shape remains fixed for conditional inference",
+  "print_summary_only": true,
+  "production_fit_calls_all_explicit_variance": true,
+  "historical_execution_and_timing_records_preserved": true,
+  "full_simulation_or_timing_rerun": false,
+  "verification": "verification/inferMM012_default_screen_update.json",
+  "protected_package_members_sha256": {
+    "inferMM/NAMESPACE": "ea22a01648e83d82e9830b6ec9f9bb738b6d238b5a925ce060e18ebfda7e97bc",
+    "inferMM/data/infer_mm_demo_data.rda": "32d2b1bfd79b995dbbec2cd1ff44e242b84be5c82524bf128a8b49ee640093e3",
+    "inferMM/inst/extdata/alves_demo.csv": "816cda68796146c0d15cbdd133f2e8bc33f5650370b089e5c323ffd847c89026",
+    "inferMM/inst/extdata/sdl_demo.csv": "45ab91e18fc5fec0254b53095cc3912627dc55c96a57e9b83ad042ec759f4399",
+    "inferMM/inst/extdata/sdl_fluorescence_raw.csv": "f9de24fe7b3a2292587359646166a10779143fe411adf7774b6540ae9aed8b39",
+    "inferMM/man/screen_mm.Rd": "509324f7aa8b0dd7e14aa61b64fa96f47a7577582be29655741319b1a2912838",
+    "inferMM/tests/testthat.R": "9fdc9e178182c809235854f4731a4a832c307854f7f7c543a12b9cf4534cefd4",
+    "inferMM/tests/testthat/test-cluster-data.R": "6b1e9ef5931acc57205ef7e7e086888bf39878444a4a889c037805306c979a02",
+    "inferMM/tests/testthat/test-cluster-projected.R": "04a34e4cb9e3ea1cfb3a19b738f76494876c0b6d8f90fc7878d9acf497cd5cdc",
+    "inferMM/tests/testthat/test-custom-variance.R": "59756b13c5fdfd7265a40374a7f5e4048f11eaff1e28be39c1797f8b3d9cd20c",
+    "inferMM/tests/testthat/test-higher-moments.R": "d506c93e2e82d32f9eaea682a1fc7b51afe719484ed465589a16caf8a0507a98",
+    "inferMM/tests/testthat/test-infer-mm.R": "9f13c83ed38ef65321a8289db9478b800ab4889cbf140071a03213a340f23649",
+    "inferMM/tests/testthat/test-profile-validation.R": "1e0db3adff0a21a9b03d0c631be105d925af2d3e4207dca70be3b7fec218c217",
+    "inferMM/tests/testthat/test-sdl-restoration.R": "77f9765cacdc7cd817c2008e27638e9ccfa352f7a937d13278e4e7f13089c52e"
+  },
+  "changed_tar_members": [
+    "inferMM/DESCRIPTION",
+    "inferMM/NEWS.md",
+    "inferMM/R/fit_mm.R",
+    "inferMM/R/methods.R",
+    "inferMM/README.md",
+    "inferMM/inst/doc/infer-mm-workflow.R",
+    "inferMM/inst/doc/infer-mm-workflow.Rmd",
+    "inferMM/inst/doc/infer-mm-workflow.html",
+    "inferMM/man/fit_mm.Rd",
+    "inferMM/man/inferMM-package.Rd",
+    "inferMM/tests/testthat/Rplots.pdf",
+    "inferMM/tests/testthat/test-default-screen.R",
+    "inferMM/vignettes/infer-mm-workflow.Rmd"
+  ],
+  "installed_example": {
+    "status": "PASS",
+    "screen_table": [
+      {
+        "model": "sqrt",
+        "quasi_aic": "-60.7115630798501",
+        "quasi_bic": "-56.3143553714509",
+        "selected": "TRUE",
+        "success": "1"
+      },
+      {
+        "model": "cuberoot",
+        "quasi_aic": "-56.2610506933309",
+        "quasi_bic": "-51.8638429849318",
+        "selected": "FALSE",
+        "success": "1"
+      },
+      {
+        "model": "log",
+        "quasi_aic": "-53.9847464317761",
+        "quasi_bic": "-49.5875387233769",
+        "selected": "FALSE",
+        "success": "1"
+      },
+      {
+        "model": "constant",
+        "quasi_aic": "-43.1012165818136",
+        "quasi_bic": "-38.7040088734144",
+        "selected": "FALSE",
+        "success": "1"
+      }
+    ],
+    "estimates": [
+      {
+        "": "Vmax",
+        "estimate": "6.44520120917799",
+        "lower": "6.28157725984794",
+        "upper": "6.60882515850804"
+      },
+      {
+        "": "Km",
+        "estimate": "76.963978484615",
+        "lower": "72.6048625565818",
+        "upper": "81.3230944126482"
+      }
+    ],
+    "old_auto_candidate_count": 3,
+    "explicit_sqrt_estimates_vcov_CI_identical": true,
+    "package_demo_rows": {
+      "sdl_demo": 192,
+      "alves_demo": 247
+    }
+  },
+  "saved_expected_files_byte_identical": 50,
+  "production_code_data_and_original_execution_records_unchanged": true,
+  "historical_compatibility_records_preserved": true,
+  "prior_dated_archives_preserved": {
+    "reproducibility_9078092_20261119.zip": {
+      "bytes": 20731330,
+      "sha256": "b22548c4262449349a57b052db67173dcfe793dbdf5c13d7e0e2ce2e674205cc"
+    },
+    "reproducibility_9078092_20261120_references.zip": {
+      "bytes": 20854874,
+      "sha256": "f748b9ba839066c456ee3d9bdbbede3db80ecf97ce92bd8a11ae409606330a9d"
+    },
+    "reproducibility_9078092_20261120.zip": {
+      "bytes": 20627402,
+      "sha256": "62987dd73467ccdae31c2146fba8fecb2d151f430d44a1d14326fc700945c4f1"
+    },
+    "reproducibility_9078092_20261120_methodrefs.zip": {
+      "bytes": 20865079,
+      "sha256": "2cf6aa174a9f55847c6d018b40d4b35838ca211687d80adc148271d3b05fa96f"
+    }
+  },
+  "package_check": {
+    "command": "R CMD check --as-cran --run-donttest --no-manual inferMM_0.1.2.tar.gz",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 0,
+    "notes": 0,
+    "tests": {
+      "pass": 694,
+      "fail": 0,
+      "warn": 0,
+      "skip": 0
+    },
+    "examples": "OK including --run-donttest",
+    "vignette_creation_and_rebuild": "OK",
+    "PDF_manual": "OK: R CMD Rd2pdf; all 26 pages visually checked",
+    "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/default_screen_20261120/check/inferMM.Rcheck/00check.log",
+    "offline_controls": {
+      "_R_CHECK_CRAN_INCOMING_REMOTE_": "false",
+      "_R_CHECK_CRAN_INCOMING_": "false",
+      "_R_CHECK_SYSTEM_CLOCK_": "false"
+    }
+  },
+  "completed_utc": "2026-11-20T07:50:30.390075+00:00"
+}

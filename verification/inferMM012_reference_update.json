@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-20",
+  "scope": "Documentation-only source/reference update of the current inferMM 0.1.2 distribution",
+  "old_012_archive": {
+    "bytes": 127588,
+    "sha256": "56d49880618962d8c4801bc60d55c5d8d894965fd61419520b7308be18f608bd"
+  },
+  "current_012_archive": {
+    "path": "packages/inferMM_0.1.2.tar.gz",
+    "bytes": 130483,
+    "sha256": "7ea1dd88f4ed49d78d1b82e52601a8beca9384e5e61228587b4ec64262d58a1b"
+  },
+  "unchanged_protected_package_members_sha256": {
+    "inferMM/NAMESPACE": "ea22a01648e83d82e9830b6ec9f9bb738b6d238b5a925ce060e18ebfda7e97bc",
+    "inferMM/R/clustered.R": "e3e116992ea1d2372819ab2d960628436198a23375c06650a3c300d05e994da3",
+    "inferMM/R/clustered_projected.R": "576dce4e79bd8825d496d2c0be5377821c7e6b410ea0391e4a88e947f6af660d",
+    "inferMM/R/fit_mm.R": "7506f5b619c3e2b93c9da6996b8558d89811de627233ad04b97ac75b83c41c84",
+    "inferMM/R/grouped.R": "9f1618e560d3c138877c9d20f8c1cdbf59256bf29dda28bc585f0fa7dc70f4cb",
+    "inferMM/R/methods.R": "fc76c19712b049c70c82e04fccbe4ee93e7d57d83295db42e29cc13c85e3e302",
+    "inferMM/R/moments.R": "651739afbb3578dd241f7f25e246c9693e2aaabf13c46ad67bc9268ef43e25d9",
+    "inferMM/R/profile.R": "7710cc8e744f29b42904187e3bc33cd14b44a1cb14b9396fe0d019d9cb575745",
+    "inferMM/R/report_mm.R": "dc4a756ac68871f608f92b17aa20e491e5cb1f6d2e8a0a0994ecc8602712a179",
+    "inferMM/R/screen.R": "6b9fc970be8851dc2f36ab3d26212d3c3194747d6bd130cb3bd368139d04ddb4",
+    "inferMM/R/simulate.R": "87ff1eeb9e928421220ab71f919826212593523cbd2a74f3acf76be8a03d3678",
+    "inferMM/R/utils.R": "2f327dfcb09a78e80d191d225e650b07fae40c8c5dd94c0fbcfef0312e4befd6",
+    "inferMM/R/variance.R": "29cdb669ade2903680e0874c3d65e3399aea3fd7c07eaa35d22604a5cf187511",
+    "inferMM/data/infer_mm_demo_data.rda": "32d2b1bfd79b995dbbec2cd1ff44e242b84be5c82524bf128a8b49ee640093e3",
+    "inferMM/inst/extdata/alves_demo.csv": "816cda68796146c0d15cbdd133f2e8bc33f5650370b089e5c323ffd847c89026",
+    "inferMM/inst/extdata/sdl_demo.csv": "45ab91e18fc5fec0254b53095cc3912627dc55c96a57e9b83ad042ec759f4399",
+    "inferMM/inst/extdata/sdl_fluorescence_raw.csv": "f9de24fe7b3a2292587359646166a10779143fe411adf7774b6540ae9aed8b39"
+  },
+  "all_12_estimation_R_files_NAMESPACE_and_R_CSV_data_byte_identical": true,
+  "changed_tar_members": [
+    "inferMM/DESCRIPTION",
+    "inferMM/NEWS.md",
+    "inferMM/README.md",
+    "inferMM/build/partial.rdb",
+    "inferMM/inst/doc/infer-mm-workflow.Rmd",
+    "inferMM/inst/doc/infer-mm-workflow.html",
+    "inferMM/man/alves_demo.Rd",
+    "inferMM/man/cluster_mm.Rd",
+    "inferMM/man/fit_mm_moments.Rd",
+    "inferMM/man/inferMM-package.Rd",
+    "inferMM/man/sdl_demo.Rd",
+    "inferMM/vignettes/infer-mm-workflow.Rmd"
+  ],
+  "saved_expected_payload_files_byte_identical": 50,
+  "all_unmodified_payload_files_match_previous_manifest": true,
+  "archived_011_and_numeric_validation_candidate_provenance_preserved": true,
+  "current_package_reinstalled_and_demo_help_assertions_pass": true,
+  "installed_assertions": "verification/inferMM012_reference_installed_demo.csv",
+  "installed_demo_summary": [
+    {
+      "dataset": "sdl_demo",
+      "rows": "192",
+      "groups": "6",
+      "installed_version": "0.1.2",
+      "installed_R_and_CSV_agree": "TRUE",
+      "installed_help_has_source_and_DOI": "TRUE"
+    },
+    {
+      "dataset": "alves_demo",
+      "rows": "247",
+      "groups": "3",
+      "installed_version": "0.1.2",
+      "installed_R_and_CSV_agree": "TRUE",
+      "installed_help_has_source_and_DOI": "TRUE"
+    }
+  ],
+  "new_estimation_or_coverage_runs_for_this_documentation_update": false,
+  "package_full_check_report": "verification/inferMM012_package_check.json",
+  "package_tests_pass": 598,
+  "R_CMD_check_errors": 0,
+  "R_CMD_check_warnings": 0,
+  "R_CMD_check_local_environment_notes": 1,
+  "manual": {
+    "path": "docs/inferMM_0.1.2_manual.pdf",
+    "pages": 25,
+    "sha256": "4fa95e478ce01b3e8d7ebbc8d5ba009a9926194707f92f3598c40cd12af65a91"
+  },
+  "original_sources": {
+    "sdl_demo": {
+      "DOI": "10.1038/s44286-023-00002-4",
+      "data": "Supplementary Data 4 / Michaelis-Menten_data"
+    },
+    "alves_demo": {
+      "DOI": "10.3389/fmicb.2021.735282",
+      "data": "Data Sheet 2 / enzymes_dataProcessed.zip / enzymeActivity_corr.csv"
+    }
+  },
+  "previous_dated_archive_preserved": {
+    "name": "reproducibility_9078092_20261120.zip",
+    "sha256": "62987dd73467ccdae31c2146fba8fecb2d151f430d44a1d14326fc700945c4f1"
+  },
+  "active_analysis_repository_code_data_and_results_unchanged": true
+}

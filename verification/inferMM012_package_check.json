@@ -1,0 +1,365 @@
+{
+  "created_utc": "2026-11-20T07:49:18.570757+00:00",
+  "version": "0.1.2",
+  "archive": "/Users/mijeongkim/Dropbox/2_research/0_MM/inferMM_0.1.2.tar.gz",
+  "archive_bytes": 149506,
+  "archive_sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+  "source_directory": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/inferMM",
+  "private_library": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/library012",
+  "base_archive": "/Users/mijeongkim/Dropbox/2_research/0_MM/inferMM_0.1.1.tar.gz",
+  "base_sha256": "c87f33882b8b9e32a197d56a1ebb5fb86f5ad01f53293b418e25470451500a29",
+  "base_preserved": true,
+  "solver_files": [
+    {
+      "path": "inferMM/R/clustered.R",
+      "sha256_011": "e3e116992ea1d2372819ab2d960628436198a23375c06650a3c300d05e994da3",
+      "sha256_012": "e3e116992ea1d2372819ab2d960628436198a23375c06650a3c300d05e994da3",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/clustered_projected.R",
+      "sha256_011": "576dce4e79bd8825d496d2c0be5377821c7e6b410ea0391e4a88e947f6af660d",
+      "sha256_012": "576dce4e79bd8825d496d2c0be5377821c7e6b410ea0391e4a88e947f6af660d",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/fit_mm.R",
+      "sha256_011": "7506f5b619c3e2b93c9da6996b8558d89811de627233ad04b97ac75b83c41c84",
+      "sha256_012": "d612fd8ae27c9e5cd27459b0e2f27bab9ca60719b965325dc15d64ff85bcca3c",
+      "byte_identical": "False"
+    },
+    {
+      "path": "inferMM/R/grouped.R",
+      "sha256_011": "9f1618e560d3c138877c9d20f8c1cdbf59256bf29dda28bc585f0fa7dc70f4cb",
+      "sha256_012": "9f1618e560d3c138877c9d20f8c1cdbf59256bf29dda28bc585f0fa7dc70f4cb",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/methods.R",
+      "sha256_011": "fc76c19712b049c70c82e04fccbe4ee93e7d57d83295db42e29cc13c85e3e302",
+      "sha256_012": "ce320bc3de4039beea26b1013efc5b887d4987e899dbe71f2b11e04ac064a742",
+      "byte_identical": "False"
+    },
+    {
+      "path": "inferMM/R/moments.R",
+      "sha256_011": "651739afbb3578dd241f7f25e246c9693e2aaabf13c46ad67bc9268ef43e25d9",
+      "sha256_012": "651739afbb3578dd241f7f25e246c9693e2aaabf13c46ad67bc9268ef43e25d9",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/profile.R",
+      "sha256_011": "7710cc8e744f29b42904187e3bc33cd14b44a1cb14b9396fe0d019d9cb575745",
+      "sha256_012": "7710cc8e744f29b42904187e3bc33cd14b44a1cb14b9396fe0d019d9cb575745",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/report_mm.R",
+      "sha256_011": "dc4a756ac68871f608f92b17aa20e491e5cb1f6d2e8a0a0994ecc8602712a179",
+      "sha256_012": "dc4a756ac68871f608f92b17aa20e491e5cb1f6d2e8a0a0994ecc8602712a179",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/screen.R",
+      "sha256_011": "6b9fc970be8851dc2f36ab3d26212d3c3194747d6bd130cb3bd368139d04ddb4",
+      "sha256_012": "6b9fc970be8851dc2f36ab3d26212d3c3194747d6bd130cb3bd368139d04ddb4",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/simulate.R",
+      "sha256_011": "87ff1eeb9e928421220ab71f919826212593523cbd2a74f3acf76be8a03d3678",
+      "sha256_012": "87ff1eeb9e928421220ab71f919826212593523cbd2a74f3acf76be8a03d3678",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/utils.R",
+      "sha256_011": "2f327dfcb09a78e80d191d225e650b07fae40c8c5dd94c0fbcfef0312e4befd6",
+      "sha256_012": "2f327dfcb09a78e80d191d225e650b07fae40c8c5dd94c0fbcfef0312e4befd6",
+      "byte_identical": "True"
+    },
+    {
+      "path": "inferMM/R/variance.R",
+      "sha256_011": "29cdb669ade2903680e0874c3d65e3399aea3fd7c07eaa35d22604a5cf187511",
+      "sha256_012": "29cdb669ade2903680e0874c3d65e3399aea3fd7c07eaa35d22604a5cf187511",
+      "byte_identical": "True"
+    }
+  ],
+  "all_12_R_files_byte_identical": false,
+  "NAMESPACE_byte_identical": true,
+  "data": {
+    "sdl_rows": 192,
+    "enzymes": 6,
+    "concentrations": 8,
+    "reactions_per_concentration": 4,
+    "observations_per_enzyme": 32,
+    "lowest_concentration_uM": 3.90625,
+    "maximum_velocity_difference_from_corrected_authority": 6.217249e-15,
+    "alves_demo_identical_to_011": true
+  },
+  "checks": {
+    "command": "R CMD check --as-cran --run-donttest inferMM_0.1.2.tar.gz",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 0,
+    "notes": 1,
+    "tests": {
+      "fail": 0,
+      "warn": 0,
+      "skip": 0,
+      "pass": 694
+    },
+    "CRAN_incoming_online": "OK",
+    "examples": "OK including --run-donttest",
+    "vignette_creation_and_rebuild": "OK",
+    "PDF_manual": "OK",
+    "note": "HTML validation skipped: recent HTML Tidy and R package V8 unavailable locally.",
+    "online_controls": {
+      "_R_CHECK_CRAN_INCOMING_": "true",
+      "_R_CHECK_CRAN_INCOMING_REMOTE_": "true",
+      "_R_CHECK_SYSTEM_CLOCK_": "true"
+    },
+    "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM.Rcheck/00check.log",
+    "platform": {
+      "R": "4.6.1",
+      "system": "macOS 15.6.1",
+      "architecture": "aarch64-apple-darwin23"
+    },
+    "current_candidate_Windows_or_R_devel_check_performed": false
+  },
+  "changes": [
+    "192-row SDL R/CSV demo mirrors",
+    "safe decimal/unit-free header preparation with raw fluorescence and provenance",
+    "grouped conditional-independence and ordinal-ID documentation",
+    "source-install/version instructions",
+    "README/example/vignette outputs",
+    "17 additional regression expectations",
+    "Full data Source/References in Rd and PDF manual, with original supplementary file and subset/units information",
+    "Source references in README and rebuilt workflow vignette",
+    "Preserved visible DOI hyphens in PDF reference links",
+    "Method-specific references in package overview and fit_mm; screen_mm references unchanged by user preference",
+    "Default fit_mm variance=\"screen\": four fixed models, selected fit and comparison table; explicit variance paths unchanged"
+  ],
+  "preparation_entry_point_in_distributed_source": "inst/data-raw/prepare_sdl_demo.R",
+  "development_data_raw_excluded_from_build": true,
+  "documentation_maintenance": "R roxygen comments and maintained Rd help updated together for the new default; all method and dataset references retained.",
+  "CRAN_submission_performed": false,
+  "remote_push_performed": false,
+  "documentation_update": {
+    "old_012_archive_sha256": "56d49880618962d8c4801bc60d55c5d8d894965fd61419520b7308be18f608bd",
+    "R_and_data_byte_identical": true,
+    "source_references": [
+      "Rapp et al.2024 doi:10.1038/s44286-023-00002-4; Supplementary Data4/Michaelis-Menten_data",
+      "Alves et al.2021 doi:10.3389/fmicb.2021.735282; DataSheet2/enzymes_dataProcessed.zip/enzymeActivity_corr.csv"
+    ],
+    "manual": {
+      "path": "/Users/mijeongkim/Dropbox/2_research/0_MM/inferMM_0.1.2_manual.pdf",
+      "pages": 25,
+      "bytes": 224961,
+      "sha256": "4fa95e478ce01b3e8d7ebbc8d5ba009a9926194707f92f3598c40cd12af65a91"
+    },
+    "visible_DOI_hyphens_preserved": true
+  },
+  "method_reference_update": {
+    "date": "2026-11-20",
+    "previous_archive_sha256": "7ea1dd88f4ed49d78d1b82e52601a8beca9384e5e61228587b4ec64262d58a1b",
+    "changed_tar_members": [
+      "inferMM/DESCRIPTION",
+      "inferMM/NEWS.md",
+      "inferMM/man/cluster_mm.Rd",
+      "inferMM/man/fit_mm.Rd",
+      "inferMM/man/fit_mm_moments.Rd",
+      "inferMM/man/inferMM-package.Rd"
+    ],
+    "all_12_R_files_NAMESPACE_R_CSV_data_and_tests_unchanged": true,
+    "screen_mm_help_byte_identical": true,
+    "new_estimation_or_simulation_runs": false,
+    "additional_unique_references": [
+      "Kim (2023)",
+      "Carroll and Ruppert (1988)",
+      "Golub and Pereyra (1973)",
+      "Mammen (1993)"
+    ],
+    "existing_method_references": [
+      "Kim and Ma (2012)",
+      "Ma and Genton (2010)"
+    ],
+    "retained_data_references": [
+      "Alves et al. (2021)",
+      "Rapp et al. (2024)"
+    ],
+    "AIC_BIC_original_papers_added": false,
+    "manual": {
+      "path": "/Users/mijeongkim/Dropbox/2_research/0_MM/inferMM_0.1.2_manual.pdf",
+      "pages": 25,
+      "bytes": 228755,
+      "sha256": "2a36b4cef8e236a4bffc61ed3d3e02e519b0297b9d878a2745b977a0832afa8c",
+      "references_pages": [
+        {
+          "page": 2,
+          "heading": "2 inferMM-package"
+        },
+        {
+          "page": 3,
+          "heading": "alves_demo 3"
+        },
+        {
+          "page": 7,
+          "heading": "cluster_mm 7"
+        },
+        {
+          "page": 11,
+          "heading": "fit_mm 11"
+        },
+        {
+          "page": 16,
+          "heading": "16 group_mm"
+        },
+        {
+          "page": 22,
+          "heading": "22 sdl_demo"
+        }
+      ]
+    },
+    "bibliography_and_method_mapping_review": "PASS",
+    "final_visual_QA": "PASS",
+    "installed_help_and_dataset_checks": "PASS"
+  },
+  "unchanged_R_file_count": 10,
+  "default_screen_update": {
+    "date": "2026-11-20",
+    "previous_012_archive_sha256": "f084f505bfa5a99fda2df60a5eb70835fb337c16f466b0df6acb4ecd88aaf07a",
+    "current_archive_sha256": "9fd566c1f19d38b00db5d43478bf823d76cd057d6894da2725427e98e9685abe",
+    "changed_R_files": [
+      "inferMM/R/fit_mm.R",
+      "inferMM/R/methods.R"
+    ],
+    "existing_function_definitions_unchanged": 111,
+    "existing_function_definitions_changed": [
+      "fit_mm",
+      "print.fit_mm",
+      "summary.fit_mm",
+      "print.summary.fit_mm"
+    ],
+    "fixed_variance_estimating_equations_and_algorithms_unchanged": true,
+    "explicit_variance_numeric_comparisons": 28,
+    "explicit_variance_max_absolute_difference": 0,
+    "archived_analysis_calls_all_specify_variance": true,
+    "previous_all_12_R_identity_claim_is_historical": true,
+    "data_and_NAMESPACE_byte_identical": true,
+    "new_full_simulation_or_timing_run": false,
+    "screening_candidates": [
+      "constant",
+      "log",
+      "sqrt",
+      "cuberoot"
+    ],
+    "default_criterion": "quasi_aic",
+    "selected_shape_conditional_intervals": true,
+    "legacy_auto_power_grid_preserved": true,
+    "manual": {
+      "path": "/Users/mijeongkim/Dropbox/2_research/0_MM/inferMM_0.1.2_manual.pdf",
+      "pages": 26,
+      "bytes": 230924,
+      "sha256": "d476e295ace394d4438001c7135ffb7c27cd9f1d8b0418b535ecc978b6e2fe33"
+    },
+    "validation": "qa/default_screen_validation.json"
+  },
+  "previous_default_screen_checks": {
+    "command": "R CMD check --as-cran --run-donttest --no-manual inferMM_0.1.2.tar.gz",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 0,
+    "notes": 0,
+    "tests": {
+      "pass": 694,
+      "fail": 0,
+      "warn": 0,
+      "skip": 0
+    },
+    "examples": "OK including --run-donttest",
+    "vignette_creation_and_rebuild": "OK",
+    "PDF_manual": "OK: R CMD Rd2pdf; all 26 pages visually checked",
+    "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/default_screen_20261120/check/inferMM.Rcheck/00check.log",
+    "offline_controls": {
+      "_R_CHECK_CRAN_INCOMING_REMOTE_": "false",
+      "_R_CHECK_CRAN_INCOMING_": "false",
+      "_R_CHECK_SYSTEM_CLOCK_": "false"
+    }
+  },
+  "cran_preflight_update": {
+    "status": "PASS_WITH_ENVIRONMENT_NOTE",
+    "completed_utc": "2026-11-20T08:42:32.754613+00:00",
+    "package_version": "0.1.2",
+    "checked_archive": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2.tar.gz",
+    "archive_sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+    "archive_bytes": 149506,
+    "changes": [
+      "Dynamic installed-version CITATION",
+      "Canonical DOI markup in six help pages",
+      "NEWS entries for citation and DOI corrections"
+    ],
+    "source_diff": {
+      "sha256": "8731d5794e9c39996527aea0728a749061c50393527f1e33cae549d143af6e05",
+      "bytes": 149506,
+      "changed_tar_members": [
+        "inferMM/DESCRIPTION",
+        "inferMM/NEWS.md",
+        "inferMM/inst/CITATION",
+        "inferMM/man/alves_demo.Rd",
+        "inferMM/man/cluster_mm.Rd",
+        "inferMM/man/fit_mm.Rd",
+        "inferMM/man/fit_mm_moments.Rd",
+        "inferMM/man/inferMM-package.Rd",
+        "inferMM/man/sdl_demo.Rd"
+      ],
+      "generated_help_database_added": [
+        "inferMM/build/partial.rdb"
+      ],
+      "R_data_tests_NAMESPACE_byte_identical": true,
+      "tar_file_count": 51
+    },
+    "estimation_code_data_tests_NAMESPACE_unchanged": true,
+    "manual": {
+      "path": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2_manual.pdf",
+      "bytes": 230819,
+      "sha256": "f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc",
+      "pages": 26,
+      "canonical_Rd_DOIs": true,
+      "visual_QA": "PASS: all 26 pages and sensitive DOI reference pages reviewed",
+      "visual_review": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/pdf_qa/pdf_visual_review_final.json",
+      "renderer": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/render_manual_preserve_doi_hyphens.py",
+      "local_renderer_workaround": "Restore visible literal hyphens only in transient DOI LaTeX labels; package source retains canonical DOI markup."
+    },
+    "checks": {
+      "command": "R CMD check --as-cran --run-donttest inferMM_0.1.2.tar.gz",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "tests": {
+        "fail": 0,
+        "warn": 0,
+        "skip": 0,
+        "pass": 694
+      },
+      "CRAN_incoming_online": "OK",
+      "examples": "OK including --run-donttest",
+      "vignette_creation_and_rebuild": "OK",
+      "PDF_manual": "OK",
+      "note": "HTML validation skipped: recent HTML Tidy and R package V8 unavailable locally.",
+      "online_controls": {
+        "_R_CHECK_CRAN_INCOMING_": "true",
+        "_R_CHECK_CRAN_INCOMING_REMOTE_": "true",
+        "_R_CHECK_SYSTEM_CLOCK_": "true"
+      },
+      "log": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM.Rcheck/00check.log",
+      "platform": {
+        "R": "4.6.1",
+        "system": "macOS 15.6.1",
+        "architecture": "aarch64-apple-darwin23"
+      },
+      "current_candidate_Windows_or_R_devel_check_performed": false
+    },
+    "CRAN_submission_performed": false,
+    "remote_check_upload_performed": false
+  }
+}

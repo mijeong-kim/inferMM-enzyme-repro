@@ -1,0 +1,58 @@
+{
+  "status": "RENDERED_REQUIRES_VISUAL_QA",
+  "output": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/inferMM_0.1.2_manual.pdf",
+  "pdf_sha256": "f056006934738d9c4de9d77d1212d883a3da7ea4c3d56a45ae4aa5ba88426fdc",
+  "build_directory": "/Users/mijeongkim/Dropbox/2_research/0_MM/releases/inferMM-0.1.2/cran_preflight_20261120/pdf_qa/doi_latex_5qtntq9b",
+  "canonical_Rd_unchanged": true,
+  "all_package_source_files_unchanged": true,
+  "global_R_namespace_or_installation_changed": false,
+  "DOI_hyperlink_targets_preserved": [
+    "https://doi.org/10.1007/s10463-011-0332-y",
+    "https://doi.org/10.1002/sta4.606",
+    "https://doi.org/10.1111/j.1467-9868.2010.00741.x",
+    "https://doi.org/10.1007/s10463-011-0332-y",
+    "https://doi.org/10.1002/sta4.606",
+    "https://doi.org/10.1111/j.1467-9868.2010.00741.x",
+    "https://doi.org/10.3389/fmicb.2021.735282",
+    "https://doi.org/10.1111/j.1467-9868.2010.00741.x",
+    "https://doi.org/10.1137/0710036",
+    "https://doi.org/10.1007/s10463-011-0332-y",
+    "https://doi.org/10.1214/aos/1176349025",
+    "https://doi.org/10.1007/s10463-011-0332-y",
+    "https://doi.org/10.1038/s44286-023-00002-4"
+  ],
+  "corrected_label_count": 6,
+  "corrected_hyphens": 14,
+  "labels": [
+    {
+      "target": "https://doi.org/10.1007/s10463-011-0332-y",
+      "before": "doi:10.1007\\slash{}s10463\\-011\\-0332\\-y",
+      "after": "doi:10.1007\\slash{}s10463-011-0332-y"
+    },
+    {
+      "target": "https://doi.org/10.1111/j.1467-9868.2010.00741.x",
+      "before": "doi:10.1111\\slash{}j.1467\\-9868.2010.00741.x",
+      "after": "doi:10.1111\\slash{}j.1467-9868.2010.00741.x"
+    },
+    {
+      "target": "https://doi.org/10.1111/j.1467-9868.2010.00741.x",
+      "before": "doi:10.1111\\slash{}j.1467\\-9868.2010.00741.x",
+      "after": "doi:10.1111\\slash{}j.1467-9868.2010.00741.x"
+    },
+    {
+      "target": "https://doi.org/10.1007/s10463-011-0332-y",
+      "before": "doi:10.1007\\slash{}s10463\\-011\\-0332\\-y",
+      "after": "doi:10.1007\\slash{}s10463-011-0332-y"
+    },
+    {
+      "target": "https://doi.org/10.1007/s10463-011-0332-y",
+      "before": "doi:10.1007\\slash{}s10463\\-011\\-0332\\-y",
+      "after": "doi:10.1007\\slash{}s10463-011-0332-y"
+    },
+    {
+      "target": "https://doi.org/10.1038/s44286-023-00002-4",
+      "before": "doi:10.1038\\slash{}s44286\\-023\\-00002\\-4",
+      "after": "doi:10.1038\\slash{}s44286-023-00002-4"
+    }
+  ]
+}
