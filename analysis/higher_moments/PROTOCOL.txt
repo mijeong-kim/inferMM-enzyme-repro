@@ -1,0 +1,48 @@
+PROSPECTIVE HIGHER-MOMENT COMPARISON, 24 OCTOBER 2026
+This protocol is fixed before examining the new simulation results.
+
+Purpose: evaluate the actual inferMM 0.1.1 higher-moment estimator,
+separately from the previous Gaussian-working sensitivity experiments.
+Use all four cells: n=50 or 200; Normal or standardized Gamma(4,1)
+innovations. Each cell has 1,000 datasets. Concentrations are equally
+spaced over [1,100]. The MM mean parameters are Vmax=100 and Km=20;
+the variance is 1.5*sqrt(S). All methods use that same correct, fixed
+variance shape. There is no variance selection or response transformation.
+Standardized Gamma innovations are (G-4)/2, with skewness 1 and raw
+kurtosis 4.5; Normal innovations have skewness 0 and kurtosis 3.
+
+Compare WNLS via stats::nls(), semiparametric estimation with supplied
+correct moments, and feasible estimation with moments='estimate'.
+The supplied-moment analysis is a reference using additional knowledge,
+not evidence that moments are known in an ordinary assay. The default
+covariance='model' is used in both semiparametric methods. WNLS uses
+the same RSS/n scale and standard-normal 95% critical value.
+
+Case order: expand.grid(n=c(50,200), error=c('Normal','Gamma4')).
+Dataset seed = 20261024 + 10000*case_id + replicate. RNG kinds are
+Mersenne-Twister/Inversion/Rejection. Datasets are shared by all methods;
+record all attempted fits, warnings, failures, successful estimates,
+standard errors, interval limits, convergence diagnostics and seeds.
+Do not delete or replace a cell according to its result. Fit-failure
+counts are reported separately; empirical summaries condition on success.
+Paired efficiency ratios use datasets successful for both methods.
+
+Report bias, RMSE, empirical SD, paired empirical variance ratio versus
+WNLS, mean reported SE/empirical SD, 95% coverage and interval width.
+Preserve coverage MCSE and paired variance-ratio Monte Carlo uncertainty
+in the summaries. Check the efficient-information covariance independently
+using the 2-by-2 covariance of (residual, residual^2-variance), on the
+first ten replications in each cell. Record true-model asymptotic
+variance ratios, distinguishing these from finite-sample results.
+An initial 20-replication-per-cell smoke run checks execution only.
+The full run uses the same source and all 1,000 replications per cell.
+
+PRE-FULL-RUN IMPLEMENTATION CHECK
+The initial smoke run showed excessive WNLS stopping failures at the
+overly strict 1e-9 numerical-derivative tolerance. Before the full run,
+the comparator was given analytical derivatives and the conventional
+1e-6 tolerance (200 iterations, minFactor=2^-20), applied identically
+in every cell. The initial source and smoke output are preserved in
+this audit folder. No generating condition or statistical endpoint was
+changed. This repair avoids portraying a stopping-tolerance artifact
+as a statistical advantage. A second smoke run precedes the full run.
