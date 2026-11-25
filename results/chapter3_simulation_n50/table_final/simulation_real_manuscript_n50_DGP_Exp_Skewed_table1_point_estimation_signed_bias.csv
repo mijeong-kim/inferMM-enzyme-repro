@@ -1,5 +1,0 @@
-"Model","Model_Label","Bias_Vmax","Vmax_RMSE","Bias_Km","Km_RMSE"
-"NLS","NLS",0.07014,1.64217,0.0707,1.06456
-"Semi_log","Semi: log(x+1)",0.07648,1.57193,0.07484,1.00071
-"Semi_x_half","Semi: x^(1/2)",0.07957,1.57418,0.07627,0.99668
-"Semi_x_third","Semi: x^(1/3)",0.07464,1.57934,0.07314,1.00614

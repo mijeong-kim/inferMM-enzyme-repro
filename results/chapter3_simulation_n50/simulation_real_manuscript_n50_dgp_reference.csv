@@ -1,7 +1,0 @@
-"dgp","label","error_case"
-"DGP_MM_Normal","MM bounded variance Normal errors","Normal"
-"DGP_MM_Skewed","MM bounded variance Skewed errors","Skewed"
-"DGP_Exp_Normal","Exponential bounded variance Normal errors","Normal"
-"DGP_Exp_Skewed","Exponential bounded variance Skewed errors","Skewed"
-"DGP_Hill_Normal","Hill bounded variance Normal errors","Normal"
-"DGP_Hill_Skewed","Hill bounded variance Skewed errors","Skewed"
