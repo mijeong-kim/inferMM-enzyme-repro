@@ -1,65 +1,69 @@
 # inferMM-enzyme-repro
 
-Reproducible code, input data, and saved output files for the manuscript
-_Variance-Aware Estimation and Inference for Michaelis-Menten Regression with Heteroscedastic and Clustered Enzyme-Kinetic Data_.
+Reproduction materials for *Variance-Aware Estimation and Inference for
+Michaelis–Menten Regression with Heteroscedastic and Clustered Enzyme-Kinetic
+Data*.
 
-This repository is a journal-neutral companion repository for the `inferMM`
-package and supersedes the earlier `inferMM-cils-repro` naming. The package
-repository contains the reusable software interface, while this repository
-contains manuscript-oriented simulation scripts, real-data analysis scripts,
-raw and processed data, and saved output tables and figures used in the paper.
-The manuscript source and PDF files are maintained separately and are not
-included here.
+## Revised-manuscript materials
 
-## Repository layout
+The verified materials are in [`revision_20261125/`](revision_20261125/).
+They contain the analysis scripts, raw inputs, replication-level reference
+results, software-version records, table-generation code and verification
+commands supplied with the revised manuscript.
 
-- `scripts/`
-  - `michaelis_menten_simulation.R`: main simulation code for the single-curve
-    and clustered benchmarking results
-  - `bootstrap_ci_sensitivity.R`: small-sample bootstrap sensitivity analyses
-  - `real_data.Rmd`: SDL and Alves real-data analyses and figure generation
-- `data/raw/`
-  - original SDL and Alves input files used in the analyses
-- `data/processed/`
-  - processed SDL reaction-rate data derived from the raw SDL file
-- `results/`
-  - `chapter3_simulation_n50/`: main simulation outputs used in the current
-    manuscript draft
-  - `chapter3_simulation/`: auxiliary simulation outputs, including denser-grid
-    and skewed-error summaries
-  - `chapter4_real_data_analysis/`: real-data figures and tables
+This directory is an unchanged extraction of
+`reproducibility_9078092_20261123_final.zip`, the numerical archive included
+with the 25 November 2026 submission files. The archive date identifies the
+reproduction-materials version; subsequent manuscript wording changes do not
+alter these numerical materials.
 
-## Dependency
+The repository's earlier `scripts/`, `data/` and `results/` directories describe
+the original analysis workflow. Use the versioned directory above for the
+revised-manuscript calculations.
 
-The scripts rely on the companion R package `inferMM`, maintained separately in
-its own repository:
+## Verification and execution
 
-```r
-# install.packages("remotes")
-remotes::install_github("mijeong-kim/inferMM")
+Start in the versioned directory and verify the 108 recorded file hashes:
+
+```sh
+cd revision_20261125
+python3 verify_manifest.py
 ```
 
-## Running the analyses
+Follow [`README.txt`](revision_20261125/README.txt) for the reference R
+environment and external dependencies. The supplied source package is
+`inferMM` 0.1.2, which is available on CRAN. Install the supplied archive to
+use the exact package build accompanying these materials:
 
-Run commands from the repository root.
+```sh
+Rscript -e "dir.create('library012', showWarnings=FALSE)"
+R CMD INSTALL --library=library012 packages/inferMM_0.1.2.tar.gz
+Rscript run.R all
+Rscript verify.R
+```
 
-- Bootstrap sensitivity analysis:
-  - `Rscript scripts/bootstrap_ci_sensitivity.R`
-- Real-data analysis and figure generation:
-  - `Rscript -e 'rmarkdown::render("scripts/real_data.Rmd")'`
-- Main simulation workflow:
-  - source `scripts/michaelis_menten_simulation.R` in R and call
-    `run_michaelis_menten_simulation(n_obs = 50, use_bayes = FALSE, ...)`
-    with an explicit `save_dir`, for example
-    `results/chapter3_simulation_n50/`
+Individual analysis modules can also be run separately, as listed in
+`README.txt`. Full simulations and bootstrap analyses can take substantial
+time. Generated files are written separately from `expected/`.
 
-## Notes
+The original simulation execution and timing records are retained, including
+their original package-version metadata. The README documents the supplied
+0.1.2 build and compatibility checks. Data sources, preprocessing, simulation
+designs, inference assumptions and numerical-convergence qualifications are
+also documented in the versioned materials.
 
-- The current manuscript uses the `n = 50` simulation outputs in
-  `results/chapter3_simulation_n50/` as its main benchmark.
-- Supplementary analyses include skewed-error robustness summaries,
-  design-density checks under the original `n = 100` fixed grid, and
-  bootstrap sensitivity analyses at `n = 20` and `n = 30`.
-- The real-data analysis script reflects the current package workflow,
-  including grouped SDL analyses and pooled Alves comparisons built around
-  `group_mm()`.
+## Package repository
+
+The reusable R package is maintained at
+[mijeong-kim/inferMM](https://github.com/mijeong-kim/inferMM).
+
+## Archive identity
+
+The unchanged reproduction ZIP has SHA-256:
+
+```text
+e15eed58a6f32b19b6e668e741145e86f80cb2730229c07aa28a8ba1f9a2a448
+```
+
+Manuscript PDFs, reviewer responses and internal review checklists are
+maintained separately from this numerical reproduction repository.
