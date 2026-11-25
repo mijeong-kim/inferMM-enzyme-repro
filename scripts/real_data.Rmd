@@ -82,13 +82,14 @@ meta <- tibble(
   mutate(
     raw_name = trimws(raw_name),
     
+    # The 3.90625 headers lack u/uM. Remove duplicate-name suffixes
+    # only after a unit suffix, so decimal concentrations remain intact.
     clean_name = raw_name %>%
       str_remove("^X") %>%
       str_replace_all("\\s+", "") %>%
-      str_remove("\\.\\.\\.[0-9]+$") %>%
-      str_remove("\\.[0-9]+$"),
+      str_remove("(?<=[uM])(?:\\.\\.\\.|\\.)[0-9]+$"),
     
-    parsed = str_match(clean_name, "^([0-9]+)[-.]([0-9]+(?:\\.[0-9]+)?)(u|uM)$"),
+    parsed = str_match(clean_name, "^(1111|2222|3333|4444|5555|6666)[-.]([0-9]+(?:\\.[0-9]+)?)(u|uM)?$"),
     
     enzyme = parsed[, 2],
     s_uM   = as.numeric(parsed[, 3])
@@ -98,6 +99,13 @@ meta <- tibble(
   mutate(replicate = row_number()) %>%
   ungroup() %>%
   select(col_id, raw_name, clean_name, enzyme, s_uM, replicate)
+
+# Retain all physical assay columns: 6 variants x 8 concentrations x 4 repeats.
+stopifnot(nrow(meta) == 192L,
+          all(table(meta$enzyme) == 32L),
+          all(table(meta$enzyme, meta$s_uM) == 4L),
+          identical(sort(unique(meta$s_uM)),
+                    c(3.90625, 7.8125, 15.625, 31.25, 62.5, 125, 250, 500)))
 
 # 확인
 print(meta, n = 30)
@@ -244,78 +252,14 @@ models <- list(
 )
 
 # 기본 수식 및 유틸리티
+source(file.path(Sys.getenv("INFERMM_REPRO_ROOT"), "R/package_adapter.R"), local = TRUE)
+
 mm_mean <- function(x, vmax, km) { vmax * x / (km + x) }
 safe_pos <- function(x) { pmin(pmax(x, 1e-10), 1e10) }
 
 # 3. 핵심 적합 엔진
 fit_mm_weighted <- function(x, y, h_fun) {
-  h_vals <- safe_pos(h_fun(x))
-  w <- 1 / h_vals
-  
-  # Km 추정을 위한 Score function
-  score_fn <- function(km) {
-    sum(w * x * y / (km + x)) * sum(w * x^2 / (km + x)^3) - 
-      sum(w * x * y / (km + x)^2) * sum(w * x^2 / (km + x)^2)
-  }
-  
-  # Km 탐색 루틴
-  upper_limit <- max(x) * 3
-  grid <- exp(seq(log(1e-4), log(upper_limit), length.out = 200))
-  s_vals <- vapply(grid, score_fn, numeric(1))
-  idx <- which(diff(sign(s_vals)) != 0)
-  
-  km_hat <- if(length(idx) > 0) {
-    uniroot(score_fn, c(grid[idx[1]], grid[idx[1]+1]))$root 
-  } else {
-    optimize(function(k) score_fn(k)^2, c(1e-6, upper_limit))$minimum
-  }
-  
-  vmax_hat <- sum(w * x * y / (km_hat + x)) / sum(w * x^2 / (km_hat + x)^2)
-  mu_hat   <- mm_mean(x, vmax_hat, km_hat)
-  eps      <- y - mu_hat
-  gamma_hat <- mean(eps^2 / h_vals)
-  
-  # --- Confidence Interval (CI) 계산 ---
-  n <- length(y)
-  p <- 2 # Vmax, Km
-  df_res <- n - p
-  
-  # 자코비안 계산 (f에 대한 Vmax, Km의 편미분)
-  # d_vmax = x / (Km + x)
-  # d_km = -Vmax * x / (Km + x)^2
-  j1 <- x / (km_hat + x)
-  j2 <- -vmax_hat * x / (km_hat + x)^2
-  J  <- cbind(j1, j2)
-  
-  # 가중치가 적용된 정보 행렬: I = J' W J
-  # (이때 gamma_hat은 분산의 스케일 인자)
-  W_mat <- diag(w)
-  info_mat <- t(J) %*% W_mat %*% J
-  
-  # 공분산 행렬: Cov = gamma_hat * inv(I)
-  cov_mat <- tryCatch(solve(info_mat) * gamma_hat, error = function(e) matrix(NA, 2, 2))
-  
-  if (!any(is.na(cov_mat))) {
-    se <- sqrt(diag(cov_mat))
-    t_val <- qt(0.975, df_res) # 95% CI를 위한 t-value
-    
-    vmax_ci <- c(vmax_hat - t_val * se[1], vmax_hat + t_val * se[1])
-    km_ci   <- c(km_hat - t_val * se[2], km_hat + t_val * se[2])
-  } else {
-    vmax_ci <- c(NA, NA)
-    km_ci   <- c(NA, NA)
-  }
-  
-  # 통계 지표 계산
-  loglik <- sum(dnorm(y, mean = mu_hat, sd = sqrt(gamma_hat * h_vals), log = TRUE))
-  aic_val <- -2 * loglik + 2 * 3
-  bic_val <- -2 * loglik + log(n) * 3
-  
-  list(
-    Vmax = vmax_hat, Vmax_LCL = vmax_ci[1], Vmax_UCL = vmax_ci[2],
-    Km = km_hat, Km_LCL = km_ci[1], Km_UCL = km_ci[2],
-    Gamma = gamma_hat, AIC = aic_val, BIC = bic_val
-  )
+  package_real_fit(x, y, h_fun)
 }
 
 # 4. 효소별 분석 실행
@@ -623,58 +567,9 @@ mm_mean <- function(x, vmax, km) { vmax * x / (km + x) }
 safe_pos <- function(x) { pmin(pmax(x, 1e-10), 1e10) }
 
 # 3. 핵심 적합 엔진 (CI 계산 포함)
+source(file.path(Sys.getenv("INFERMM_REPRO_ROOT"), "R/package_adapter.R"), local = TRUE)
 fit_mm_weighted <- function(x, y, h_fun) {
-  h_vals <- safe_pos(h_fun(x))
-  w <- 1 / h_vals
-  
-  score_fn <- function(km) {
-    sum(w * x * y / (km + x)) * sum(w * x^2 / (km + x)^3) - 
-      sum(w * x * y / (km + x)^2) * sum(w * x^2 / (km + x)^2)
-  }
-  
-  # Km 탐색 범위 설정
-  upper_limit <- max(x) * 5
-  grid <- exp(seq(log(1e-4), log(upper_limit), length.out = 200))
-  s_vals <- vapply(grid, score_fn, numeric(1))
-  idx <- which(diff(sign(s_vals)) != 0)
-  
-  km_hat <- if(length(idx) > 0) {
-    uniroot(score_fn, c(grid[idx[1]], grid[idx[1]+1]))$root 
-  } else {
-    optimize(function(k) score_fn(k)^2, c(1e-6, upper_limit))$minimum
-  }
-  
-  vmax_hat <- sum(w * x * y / (km_hat + x)) / sum(w * x^2 / (km_hat + x)^2)
-  mu_hat   <- mm_mean(x, vmax_hat, km_hat)
-  eps      <- y - mu_hat
-  gamma_hat <- mean(eps^2 / h_vals)
-  
-  # Confidence Interval (CI) 계산
-  n <- length(y); p <- 2; df_res <- n - p
-  j1 <- x / (km_hat + x)
-  j2 <- -vmax_hat * x / (km_hat + x)^2
-  J  <- cbind(j1, j2)
-  
-  W_mat <- diag(w)
-  info_mat <- t(J) %*% W_mat %*% J
-  cov_mat <- tryCatch(solve(info_mat) * gamma_hat, error = function(e) matrix(NA, 2, 2))
-  
-  if (!any(is.na(cov_mat))) {
-    se <- sqrt(pmax(0, diag(cov_mat)))
-    t_val <- qt(0.975, df_res)
-    vmax_ci <- c(vmax_hat - t_val * se[1], vmax_hat + t_val * se[1])
-    km_ci   <- c(km_hat - t_val * se[2], km_hat + t_val * se[2])
-  } else {
-    vmax_ci <- c(NA, NA); km_ci <- c(NA, NA)
-  }
-  
-  loglik <- sum(dnorm(y, mean = mu_hat, sd = sqrt(gamma_hat * h_vals), log = TRUE))
-  aic_val <- -2 * loglik + 2 * 3
-  bic_val <- -2 * loglik + log(n) * 3
-  
-  list(Vmax = vmax_hat, Vmax_LCL = vmax_ci[1], Vmax_UCL = vmax_ci[2],
-       Km = km_hat, Km_LCL = km_ci[1], Km_UCL = km_ci[2],
-       Gamma = gamma_hat, AIC = aic_val, BIC = bic_val)
+  package_real_fit(x, y, h_fun)
 }
 
 # 4. 분석 실행
@@ -827,7 +722,10 @@ for (enz in unique(df$enzyme)) {
   x_seq <- seq(0, current_x_max * 1.1, length.out = 200)
   
   y_mean <- mm_mean(x_seq, params$Vmax, params$Km)
-  y_sd   <- sqrt(params$Gamma * (x_seq^0.5))
+  h_fun <- models[[target_model]]
+  y_sd <- sqrt(params$Gamma * h_fun(x_seq))
+  # NLS uses one fitted residual scale at every concentration.
+  stopifnot(all(is.finite(y_sd)), all(y_sd == sqrt(params$Gamma)))
   
   plot_grid_list[[enz]] <- data.frame(
     Enzyme = enz,
@@ -884,3 +782,18 @@ ggsave(
 )
 ```
 
+
+# Cross-dataset summary used by the comparative manuscript table.
+```{r}
+sdl_summary <- read.csv(file.path(real_data_table_dir,
+  "real_data_table1_SDL_summary.csv"), row.names = 1)
+alves_summary <- read.csv(file.path(real_data_table_dir,
+  "real_data_table2_Alves_summary.csv"))
+summary_columns <- c("Model", "Mean_AIC", "Mean_BIC", "Avg_Vmax", "Avg_Km")
+combined_summary <- bind_rows(
+  data.frame(Dataset = "SDL (n=6 enzymes)", sdl_summary[, summary_columns]),
+  data.frame(Dataset = "Alves (n=3 enzymes)", alves_summary[, summary_columns])
+)
+write.csv(combined_summary, file.path(real_data_table_dir,
+  "real_data_table3_combined_summary.csv"), row.names = FALSE)
+```
